@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwbevqfomspas"]
+
+[ext_resource type="Script" path="res://Scenes/GUI/GUI.gd" id="1_fp4tp"]
+
+[node name="GUI" type="CanvasLayer"]
+script = ExtResource("1_fp4tp")
+
+[node name="HBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Label2" type="Label" parent="HBoxContainer"]
+offset_top = 27.0
+offset_right = 40.0
+offset_bottom = 50.0
+
+[node name="Label3" type="Label" parent="HBoxContainer"]
+offset_top = 54.0
+offset_right = 40.0
+offset_bottom = 77.0

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://dtrxccff1s870"]
+
+[ext_resource type="Texture2D" uid="uid://dmdp4dk2dbwpv" path="res://Level Assets/PLACE.png" id="1_60sf7"]
+[ext_resource type="PackedScene" uid="uid://jnl7sck3w5ra" path="res://Scenes/Player/Player.tscn" id="2_i0csg"]
+[ext_resource type="PackedScene" uid="uid://dwbevqfomspas" path="res://Scenes/GUI/GUI.tscn" id="3_nru2g"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_v0iqf"]
+texture = ExtResource("1_60sf7")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+1:0/0 = 0
+1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:0/0/physics_layer_0/angular_velocity = 0.0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+2:0/0 = 0
+2:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+2:0/0/physics_layer_0/angular_velocity = 0.0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+
+[sub_resource type="TileSet" id="TileSet_51uhm"]
+tile_size = Vector2i(48, 48)
+physics_layer_0/collision_layer = 1
+sources/3 = SubResource("TileSetAtlasSource_v0iqf")
+
+[node name="Node2d" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_51uhm")
+format = 2
+layer_0/tile_data = PackedInt32Array(851967, 3, 0, 917503, 3, 0, 1048575, 3, 0, 786432, 3, 0, 851968, 3, 0, 983040, 3, 0, 786433, 3, 0, 851969, 3, 0, 917505, 3, 0, 786434, 3, 0, 851970, 3, 0, 917506, 3, 0, 786435, 3, 0, 851971, 3, 0, 917507, 3, 0, 786436, 3, 0, 851972, 3, 0, 917508, 3, 0, 786437, 3, 0, 851973, 3, 0, 917509, 3, 0, 786438, 3, 0, 851974, 3, 0, 917510, 3, 0, 786439, 3, 0, 851975, 3, 0, 917511, 3, 0, 786440, 3, 0, 851976, 3, 0, 917512, 3, 0, 786441, 3, 0, 851977, 3, 0, 983049, 3, 0, 786442, 3, 0, 851978, 3, 0, 983050, 3, 0, 786443, 3, 0, 851979, 3, 0, 983051, 3, 0, 786444, 3, 0, 851980, 3, 0, 983052, 3, 0, 786445, 3, 0, 851981, 3, 0, 983053, 3, 0, 786446, 3, 0, 851982, 3, 0, 786447, 3, 0, 851983, 3, 0, 917519, 3, 0, 983055, 3, 0, 786448, 3, 0, 851984, 3, 0, 917520, 3, 0, 983056, 3, 0, 786449, 3, 0, 851985, 3, 0, 917521, 3, 0, 983057, 3, 0, 786450, 3, 0, 851986, 3, 0, 917522, 3, 0, 983058, 3, 0, 786451, 3, 0, 851987, 3, 0, 917523, 3, 0, 983059, 3, 0, 786452, 3, 0, 851988, 3, 0, 917524, 3, 0, 983060, 3, 0, 786453, 3, 0, 851989, 3, 0, 917525, 3, 0, 983061, 3, 0, 786454, 3, 0, 851990, 3, 0, 917526, 3, 0, 983062, 3, 0, 786455, 3, 0, 851991, 3, 0, 917527, 3, 0, 983063, 3, 0, 983039, 3, 0, 917504, 3, 0, 983041, 3, 0, 983042, 3, 0, 983043, 3, 0, 983044, 3, 0, 983045, 3, 0, 983046, 3, 0, 983047, 3, 0, 983048, 3, 0, 917513, 3, 0, 917514, 3, 0, 917515, 3, 0, 917516, 3, 0, 917517, 3, 0, 917518, 3, 0, 983054, 3, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_i0csg")]
+position = Vector2(153, 487)
+
+[node name="GUI" parent="." instance=ExtResource("3_nru2g")]
