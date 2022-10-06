@@ -4,6 +4,7 @@ var BodyAnimState
 @onready var BodyAnimTree = $BodyAnimationTree as AnimationTree
 @onready var GUI = get_parent().find_child("GUI")
 @export var jumpForce = -400.0
+@onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -27,6 +28,7 @@ func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
 func _physics_process(delta):
+	$Marker2d.look_at(get_global_mouse_position())
 	
 	if not is_on_floor():
 		canMove = true
@@ -40,6 +42,11 @@ func _physics_process(delta):
 			state = STOPED
 		jumped = false
 		
+	if Input.is_action_just_pressed("Shoot"):
+		var bulletInstance = bullet.instantiate()
+		bulletInstance.transform = $Marker2d.transform
+		bulletInstance.position = global_position
+		get_parent().add_child(bulletInstance)
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = jumpForce
 		jumped = true

@@ -296,3 +296,10 @@ parameters/playback = SubResource("AnimationNodeStateMachinePlayback_fmul5")
 libraries = {
 "": SubResource("AnimationLibrary_gt154")
 }
+
+[node name="Marker2d" type="Marker2D" parent="."]
+position = Vector2(0, 24)
+
+[node name="Polygon2d" type="Polygon2D" parent="Marker2d"]
+position = Vector2(11, -27)
+polygon = PackedVector2Array(0, 24, 24, 24, 24, 32, 0, 32)
