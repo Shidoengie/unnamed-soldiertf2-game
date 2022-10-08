@@ -207,14 +207,14 @@ tracks/10/keys = {
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("../ExplosionRad/CollisionShape2d2:disabled")
+tracks/11/path = NodePath("../ExplosionRad/CollisionShape2d:disabled")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, true]
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_y04nm"]
@@ -354,14 +354,14 @@ tracks/10/keys = {
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("../ExplosionRad/CollisionShape2d2:disabled")
+tracks/11/path = NodePath("../ExplosionRad/CollisionShape2d:disabled")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_82apj"]
@@ -370,8 +370,8 @@ _data = {
 "RESET": SubResource("Animation_y04nm")
 }
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_12xum"]
-radius = 104.307
+[sub_resource type="CircleShape2D" id="CircleShape2D_x7oxt"]
+radius = 88.3629
 
 [node name="Rocket" type="Area2D"]
 collision_layer = 2
@@ -420,10 +420,9 @@ texture = ExtResource("4_o8r07")
 
 [node name="ExplosionRad" type="Area2D" parent="."]
 
-[node name="CollisionShape2d2" type="CollisionShape2D" parent="ExplosionRad"]
-shape = SubResource("CircleShape2D_12xum")
-disabled = true
+[node name="CollisionShape2d" type="CollisionShape2D" parent="ExplosionRad"]
+shape = SubResource("CircleShape2D_x7oxt")
 
 [connection signal="body_entered" from="." to="." method="_on_rocket_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
-[connection signal="body_entered" from="ExplosionRad" to="." method="_on_explosion_rad_body_entered"]
+[connection signal="body_shape_entered" from="ExplosionRad" to="." method="_on_explosion_rad_body_shape_entered"]

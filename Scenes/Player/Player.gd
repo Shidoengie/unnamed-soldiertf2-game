@@ -1,6 +1,6 @@
-extends CharacterBody2D
+extends RigidBody2D
 
-var BodyAnimState
+var BodyAnimplayerState
 @onready var BodyAnimTree = $BodyAnimationTree as AnimationTree
 @onready var GUI = get_parent().find_child("GUI")
 @export var jumpForce = -400.0
@@ -12,10 +12,10 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var jumped = false
 var canMove = false
 var isMoving = false
+var isOnfloor
 @export var walkSpeed = 400.0
 var walkSpeedmax
 var endSpeed = 0.0
-
 enum {JUMPING = 0,STOPED = 1,FALLING = 2,WALKING = 3}
 var anim_dict = {
 	0:"Jump",
@@ -23,58 +23,60 @@ var anim_dict = {
 	2:"Fall",
 	3:"Walk",
 }
-var state
+var playerState
 func _ready():
-	BodyAnimState = BodyAnimTree.get("parameters/playback")
+	BodyAnimplayerState = BodyAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
-func _physics_process(delta):
+func _integrate_forces(s):
+	var colArr = [$RayCast2d.is_colliding(),$RayCast2d2.is_colliding(),$RayCast2d3.is_colliding()]
+	isOnfloor = get_contact_count()>0
 	$Marker2d.look_at(get_global_mouse_position())
 	
-	if not is_on_floor():
+	if get_contact_count() == 0:
 		canMove = true
-		velocity.y += gravity * delta
 		if jumped:
-			state = JUMPING
+			playerState = JUMPING
 		else:
-			state = FALLING
+			playerState = FALLING
 	else:
-		if state == JUMPING or state == FALLING:
-			state = STOPED
+		if playerState == JUMPING or playerState == FALLING:
+			playerState = STOPED
 		jumped = false
 		
 	if Input.is_action_just_pressed("Shoot"):
-		var bulletInstance = bullet.instantiate()
-		print(Vector2.from_angle($Marker2d.rotation))
-		bulletInstance.dir = Vector2.from_angle($Marker2d.rotation)
-		bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
-		bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
-		bulletInstance.position = global_position
-		get_parent().add_child(bulletInstance)
-	if Input.is_action_just_pressed("Jump") and is_on_floor():
-		velocity.y = jumpForce
+		shoot()
+	if Input.is_action_just_pressed("Jump") and isOnfloor:
+		s.linear_velocity.y = jumpForce
 		jumped = true
-	if state == JUMPING or state == FALLING:
+	if playerState == JUMPING or playerState == FALLING:
 		walkSpeed = max(lerp(walkSpeed,walkSpeedmax/2.5,0.01),walkSpeedmax/2.5)
 	else:
 		walkSpeed = walkSpeedmax
 	if Input.is_action_pressed("MoveLeft"):
-		velocity.x = -walkSpeed
+		s.linear_velocity.x = -walkSpeed
 		$Sprite2d.flip_h = true
 		isMoving = true
 	elif Input.is_action_pressed("MoveRight"):
-		velocity.x = walkSpeed
+		s.linear_velocity.x = walkSpeed
 		$Sprite2d.flip_h = false
 		isMoving = true
 	elif canMove:
 		isMoving = false
-		velocity.x = lerp(velocity.x,0.0,0.3)
-	if isMoving and is_on_floor():
-		state = WALKING
-	elif not isMoving and is_on_floor():
-		state = STOPED
-	BodyAnimState.travel(anim_dict[state])
-	GUI.states = state
+		s.linear_velocity.x = lerp(s.linear_velocity.x,0.0,0.3)
+	if isMoving and isOnfloor:
+		playerState = WALKING
+	elif not isMoving and isOnfloor:
+		playerState = STOPED
+	
+	BodyAnimplayerState.travel(anim_dict[playerState])
+	GUI.states = playerState
 	GUI.walkspeed = walkSpeed
-	GUI.vel = velocity
-	move_and_slide()
+	GUI.vel = s.linear_velocity
 
+func shoot():
+	var bulletInstance = bullet.instantiate()
+	bulletInstance.dir = Vector2.from_angle($Marker2d.rotation)
+	bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
+	bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
+	bulletInstance.position = global_position
+	get_parent().add_child(bulletInstance)

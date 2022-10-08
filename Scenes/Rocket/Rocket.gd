@@ -14,18 +14,10 @@ func _on_rocket_body_entered(body):
 
 func _on_animation_player_animation_finished(anim_name):
 	queue_free()
-
-
-func _on_explosion_rad_body_entered(body):
+func _on_explosion_rad_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
 	var bodyDir = Vector2.from_angle(position.angle_to_point(body.position))*Vector2(3000,2000)
 	print(bodyDir)
 	if body is CharacterBody2D:
-		if body.name == "Player":
-			var feet = body.find_child("Feet")
-			bodyDir += Vector2.from_angle(
-				position.angle_to_point(feet.global_position)
-				)*Vector2(4,1)*1000
-		body.velocity = bodyDir
-		#Vector2.from_angle(position.angle_to_point(body.position))
+		pass
 	elif body is RigidBody2D:
 		pass
