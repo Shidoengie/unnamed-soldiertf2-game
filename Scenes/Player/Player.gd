@@ -44,7 +44,10 @@ func _physics_process(delta):
 		
 	if Input.is_action_just_pressed("Shoot"):
 		var bulletInstance = bullet.instantiate()
-		bulletInstance.transform = $Marker2d.transform
+		print(Vector2.from_angle($Marker2d.rotation))
+		bulletInstance.dir = Vector2.from_angle($Marker2d.rotation)
+		bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
+		bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
 		bulletInstance.position = global_position
 		get_parent().add_child(bulletInstance)
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
