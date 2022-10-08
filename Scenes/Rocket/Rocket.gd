@@ -24,7 +24,7 @@ func _on_explosion_rad_body_entered(body):
 			var feet = body.find_child("Feet")
 			bodyDir += Vector2.from_angle(
 				position.angle_to_point(feet.global_position)
-				)*Vector2(4,1)*body.walkSpeedmax
+				)*Vector2(4,1)*1000
 		body.velocity = bodyDir
 		#Vector2.from_angle(position.angle_to_point(body.position))
 	elif body is RigidBody2D:
