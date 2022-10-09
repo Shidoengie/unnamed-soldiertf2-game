@@ -32,8 +32,8 @@ color_ramp = SubResource("GradientTexture1D_4nbo8")
 turbulence_enabled = true
 
 [sub_resource type="Gradient" id="Gradient_ue1s1"]
-offsets = PackedFloat32Array(0, 0.0308483, 0.131105, 0.246787, 0.429306, 0.724936, 0.946015)
-colors = PackedColorArray(1, 1, 1, 1, 0.941176, 0.843137, 0.301961, 1, 0.94902, 0.521569, 0.239216, 1, 0.494118, 0.317647, 0.317647, 1, 0.250272, 0.191794, 0.192254, 1, 0.176471, 0.176471, 0.176471, 1, 0.27451, 0.235294, 0.235294, 0.188235)
+offsets = PackedFloat32Array(0, 0.026178, 0.131105, 0.246787, 0.429306, 0.724936, 0.946015)
+colors = PackedColorArray(1, 1, 1, 1, 0.94, 0.86245, 0.423, 1, 0.95, 0.4427, 0.1045, 1, 0.494118, 0.317647, 0.317647, 1, 0.250272, 0.191794, 0.192254, 1, 0.176471, 0.176471, 0.176471, 1, 0.27451, 0.235294, 0.235294, 0.188235)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_itnbw"]
 gradient = SubResource("Gradient_ue1s1")
@@ -67,6 +67,8 @@ scale_max = 4.0
 scale_curve = SubResource("CurveTexture_xgpcl")
 color_ramp = SubResource("GradientTexture1D_itnbw")
 turbulence_enabled = true
+sub_emitter_mode = 2
+sub_emitter_amount_at_end = 1
 
 [sub_resource type="Animation" id="Animation_ycjys"]
 resource_name = "Explosion"
@@ -75,7 +77,7 @@ step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../GpuParticles2d2:emitting")
+tracks/0/path = NodePath("../ExplosionMain:emitting")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -87,7 +89,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("../GpuParticles2d2:process_material")
+tracks/1/path = NodePath("../ExplosionMain:process_material")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -99,7 +101,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("../GpuParticles2d2:explosiveness")
+tracks/2/path = NodePath("../ExplosionMain:explosiveness")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -111,7 +113,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("../GpuParticles2d2:randomness")
+tracks/3/path = NodePath("../ExplosionMain:randomness")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -123,7 +125,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../GpuParticles2d2:speed_scale")
+tracks/4/path = NodePath("../ExplosionMain:speed_scale")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -135,7 +137,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("../GpuParticles2d2:lifetime")
+tracks/5/path = NodePath("../ExplosionMain:lifetime")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -147,7 +149,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("../GpuParticles2d2:amount")
+tracks/6/path = NodePath("../ExplosionMain:amount")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -159,7 +161,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("../GpuParticles2d2:texture")
+tracks/7/path = NodePath("../ExplosionMain:texture")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -211,10 +213,10 @@ tracks/11/path = NodePath("../ExplosionRad/CollisionShape2d:disabled")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false]
+"values": [false, true]
 }
 
 [sub_resource type="Animation" id="Animation_y04nm"]
@@ -222,7 +224,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../GpuParticles2d2:emitting")
+tracks/0/path = NodePath("../ExplosionMain:emitting")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -234,7 +236,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("../GpuParticles2d2:process_material")
+tracks/1/path = NodePath("../ExplosionMain:process_material")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -246,7 +248,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("../GpuParticles2d2:explosiveness")
+tracks/2/path = NodePath("../ExplosionMain:explosiveness")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -258,7 +260,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("../GpuParticles2d2:randomness")
+tracks/3/path = NodePath("../ExplosionMain:randomness")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -270,7 +272,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("../GpuParticles2d2:speed_scale")
+tracks/4/path = NodePath("../ExplosionMain:speed_scale")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -282,7 +284,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("../GpuParticles2d2:lifetime")
+tracks/5/path = NodePath("../ExplosionMain:lifetime")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -294,7 +296,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("../GpuParticles2d2:amount")
+tracks/6/path = NodePath("../ExplosionMain:amount")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -306,7 +308,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("../GpuParticles2d2:texture")
+tracks/7/path = NodePath("../ExplosionMain:texture")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -361,7 +363,7 @@ tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false]
+"values": [true]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_82apj"]
@@ -377,6 +379,7 @@ radius = 88.3629
 collision_layer = 2
 collision_mask = 6
 script = ExtResource("1_8sh0q")
+explosionForce = 1000
 speed = 1500
 
 [node name="Icon" type="Sprite2D" parent="."]
@@ -406,8 +409,7 @@ libraries = {
 "": SubResource("AnimationLibrary_82apj")
 }
 
-[node name="GpuParticles2d2" type="GPUParticles2D" parent="."]
-position = Vector2(8, 0)
+[node name="ExplosionMain" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 64
 lifetime = 1.5
@@ -422,6 +424,7 @@ texture = ExtResource("4_o8r07")
 
 [node name="CollisionShape2d" type="CollisionShape2D" parent="ExplosionRad"]
 shape = SubResource("CircleShape2D_x7oxt")
+disabled = true
 
 [connection signal="body_entered" from="." to="." method="_on_rocket_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

@@ -269,12 +269,9 @@ _data = {
 "Walk": SubResource("Animation_na6da")
 }
 
-[node name="Player" type="RigidBody2D"]
+[node name="Player" type="CharacterBody2D"]
 position = Vector2(0, -8)
 collision_mask = 7
-max_contacts_reported = 1
-contact_monitor = true
-lock_rotation = true
 script = ExtResource("1_3x8r0")
 
 [node name="Sprite2d" type="Sprite2D" parent="."]
@@ -310,18 +307,3 @@ polygon = PackedVector2Array(0, 24, 24, 24, 24, 32, 0, 32)
 
 [node name="Feet" type="Marker2D" parent="."]
 position = Vector2(0, 24)
-
-[node name="RayCast2d" type="RayCast2D" parent="."]
-position = Vector2(-8, 17)
-target_position = Vector2(0, 9)
-collision_mask = 7
-
-[node name="RayCast2d2" type="RayCast2D" parent="."]
-position = Vector2(0, 17)
-target_position = Vector2(0, 9)
-collision_mask = 7
-
-[node name="RayCast2d3" type="RayCast2D" parent="."]
-position = Vector2(8, 17)
-target_position = Vector2(0, 9)
-collision_mask = 7
