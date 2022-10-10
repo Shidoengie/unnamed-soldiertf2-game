@@ -379,7 +379,7 @@ radius = 88.3629
 collision_layer = 2
 collision_mask = 6
 script = ExtResource("1_8sh0q")
-explosionForce = 1000
+explosionForce = 800
 speed = 1500
 
 [node name="Icon" type="Sprite2D" parent="."]
@@ -429,3 +429,4 @@ disabled = true
 [connection signal="body_entered" from="." to="." method="_on_rocket_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="body_shape_entered" from="ExplosionRad" to="." method="_on_explosion_rad_body_shape_entered"]
+[connection signal="body_shape_exited" from="ExplosionRad" to="." method="_on_explosion_rad_body_shape_exited"]
