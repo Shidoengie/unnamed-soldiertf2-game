@@ -1,6 +1,8 @@
 extends CharacterBody2D
 var BodyAnimState
+var GunAnimState
 @onready var BodyAnimTree = $BodyAnimationTree as AnimationTree
+@onready var GunAnim = $GunAnim as AnimationPlayer
 @onready var GUI = get_parent().find_child("GUI")
 @onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -9,10 +11,11 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var isMoving = false
 @export var walkSpeed = 400.0
 var walkSpeedmax
-
+var ammo = 3
 var airSpeed = 50.0
 var launchVec = Vector2.ZERO
 var launched = false
+var canShoot = true
 
 enum {STOPED = 0,FALLING = 1,WALKING = 2}
 var anim_dict = {
@@ -23,8 +26,10 @@ var anim_dict = {
 var state
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
+	GunAnimState = $GunAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
 func _physics_process(delta):
+	ammo = clamp(ammo,0,3)
 	$Marker2d.look_at(get_global_mouse_position())
 	if not is_on_floor():
 		if launched:
@@ -47,13 +52,9 @@ func _physics_process(delta):
 	move_and_slide()
 
 func playerControl() -> void:
-	if Input.is_action_just_pressed("Shoot"):
-		var bulletInstance = bullet.instantiate()
-		bulletInstance.moveDirection = Vector2.from_angle($Marker2d.rotation)
-		bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
-		bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
-		bulletInstance.position = global_position
-		get_parent().add_child(bulletInstance)
+	if Input.is_action_just_pressed("Shoot") and canShoot:
+		shoot()
+		
 	if Input.is_action_pressed("MoveLeft"):
 		if velocity.x > 0:
 			walkSpeed = walkSpeedmax
@@ -71,3 +72,13 @@ func playerControl() -> void:
 	elif is_on_floor():
 		isMoving = false
 		velocity.x = lerp(velocity.x,0.0,0.3)
+
+func shoot() -> void:
+	ammo -= 1
+	GunAnim.play("Shoot")
+	var bulletInstance = bullet.instantiate()
+	bulletInstance.moveDirection = Vector2.from_angle($Marker2d.rotation)
+	bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
+	bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
+	bulletInstance.position = $Marker2d/Hand.global_position
+	get_parent().add_child(bulletInstance)
