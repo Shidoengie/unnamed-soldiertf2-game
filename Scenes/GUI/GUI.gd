@@ -9,6 +9,7 @@ var state_names = {
 	0:"STOPPED",
 	1:"FALLING",
 	2:"WALKING",
+	3:"JUMPING"
 }
 func _process(delta):
 	$DEV/Label.text = state_names[states]
