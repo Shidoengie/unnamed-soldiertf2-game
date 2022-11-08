@@ -35,16 +35,32 @@ var anim_dict = {
 	3:"Jump"
 }
 var state
-
+func _physics_process(delta):
+	
+	move_and_slide()
 func _PlayerInput():
 	if Input.is_action_just_pressed("Jump") and canJump:
 		_Jump()
-	if Input.is_action_just_pressed("MoveLeft"):
-		pass
-	elif Input.is_action_just_pressed("MoveRight"):
-		pass
+	if Input.is_action_pressed("MoveLeft"):
+		if velocity.x > 0:
+			walkSpeed = walkSpeedmax
+			launched = false
+		velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+		$Sprite2d.flip_h = true
+		isMoving = true
+	elif Input.is_action_pressed("MoveRight"):
+		if velocity.x < 0:
+			walkSpeed = walkSpeedmax
+			launched = false
+		velocity.x = lerp(velocity.x,walkSpeed,0.1)
+		$Sprite2d.flip_h = false
+		isMoving = true
+	elif is_on_floor():
+		isMoving = false
+		velocity.x = lerp(velocity.x,0.0,0.3)
 func _Jump():
-	pass
+	jumping = true
+	velocity.y = -jumpForce
 func _shoot() -> void:
 	if ammo <= 0 or not canShoot:
 		return
