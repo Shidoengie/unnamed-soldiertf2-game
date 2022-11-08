@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var explosionForce = 500
+@export var explosionForce = 400
 @export var speed = 2500
 var velocity = Vector2.ZERO
 var moveDirection

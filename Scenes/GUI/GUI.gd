@@ -4,6 +4,7 @@ var states = 0
 var walkspeed = 0
 var vel = 0
 var lauched = false
+var canjump = false
 var ammo = 0
 var state_names = {
 	0:"STOPPED",
@@ -17,3 +18,4 @@ func _process(delta):
 	$DEV/Label3.text = str(walkspeed)
 	$DEV/Label4.text = "lauched "+str(lauched)
 	$Ammo.text = str(ammo)
+	$DEV/Label5.text = str(canjump)

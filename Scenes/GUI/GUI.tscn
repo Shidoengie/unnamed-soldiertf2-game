@@ -29,6 +29,11 @@ offset_right = 66.0
 offset_bottom = 107.0
 text = "Lanched"
 
+[node name="Label5" type="Label" parent="DEV"]
+offset_top = 111.0
+offset_right = 66.0
+offset_bottom = 134.0
+
 [node name="Ammo" type="Label" parent="."]
 anchors_preset = 1
 anchor_left = 1.0
