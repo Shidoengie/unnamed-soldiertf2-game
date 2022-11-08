@@ -388,8 +388,3 @@ tree_root = SubResource("AnimationNodeStateMachine_ormj7")
 anim_player = NodePath("../GunAnim")
 active = true
 parameters/playback = SubResource("AnimationNodeStateMachinePlayback_xv574")
-
-[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
-[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
-[connection signal="animation_finished" from="GunAnim" to="." method="_on_gun_anim_animation_finished"]
-[connection signal="animation_started" from="GunAnim" to="." method="_on_gun_anim_animation_started"]
