@@ -33,30 +33,38 @@ var anim_dict = {
 	2:"Walk",
 	3:"Jump"
 }
-var state
+var state = 0
 
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
 	GunAnimState = $GunAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
 func _physics_process(delta):
-	playerControl()
+	
 	if BodyAnimState.get_current_node() == "Land":
 		ReloadTimer.start()
-	
+	if not is_on_floor():
+		velocity.y += gravity * delta
 	$Marker2d.look_at(get_global_mouse_position())
 	
-	if not is_on_floor():
-		ReloadTimer.stop()
+	print(BodyAnimState.get_current_node())
+	if ["RESET","Walk"].has(BodyAnimState.get_current_node()) and anim_dict[state] == JUMP:
 		CoyoteTimer.start()
-		if launched:
-			walkSpeed = airSpeed+abs(launchVec.x)
-		velocity.y += gravity * delta
-		if jumping:
-			state = JUMP
-		else:
-			state = FALLING
-	else:
+	
+	BodyAnimState.travel(anim_dict[state])
+	GUI.states = state
+	GUI.walkspeed = walkSpeed
+	GUI.vel = velocity
+	GUI.lauched = launched
+	GUI.ammo = ammo
+	GUI.canjump = canJump
+	_stateChecks()
+	_playerControl()
+	Regen()
+	move_and_slide()
+	
+func _stateChecks():
+	if is_on_floor():
 		canJump = true
 		if isMoving:
 			state = WALKING
@@ -65,22 +73,16 @@ func _physics_process(delta):
 			state = STOPED
 		launched = false
 		jumping = false
-	playerControl()
-	print(BodyAnimState.get_current_node())
-	if ["RESET","Walk"].has(BodyAnimState.get_current_node()) and anim_dict[state] == JUMP:
+	else:
+		ReloadTimer.stop()
 		CoyoteTimer.start()
-	BodyAnimState.travel(anim_dict[state])
-	
-	GUI.states = state
-	GUI.walkspeed = walkSpeed
-	GUI.vel = velocity
-	GUI.lauched = launched
-	GUI.ammo = ammo
-	GUI.canjump = canJump
-	move_and_slide()
-	Regen()
-	
-func playerControl() -> void:
+		if launched:
+			walkSpeed = airSpeed+abs(launchVec.x)
+		if jumping:
+			state = JUMP
+		else:
+			state = FALLING
+func _playerControl() -> void:
 	if Input.is_action_just_pressed("Shoot") and canShoot:
 		shoot()
 	if Input.is_action_pressed("MoveLeft"):
