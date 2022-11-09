@@ -14,14 +14,8 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce = 300
 @export var walkSpeed = 400.0
 
-
-var isMoving = false
-var jumping = false
 var walkSpeedmax
 var ammo = 3
-var airSpeed = 50.0
-var launchVec = Vector2.ZERO
-var launched = false
 var canShoot = true
 var maxAmmo = 3
 var canJump = true
@@ -46,7 +40,7 @@ func _physics_process(delta):
 	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
 	GUI.vel = velocity
-	GUI.lauched = launched
+	GUI.lauched = false
 	GUI.ammo = ammo
 	GUI.canjump = canJump
 	_stateChecks()
