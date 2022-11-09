@@ -9,30 +9,35 @@ script = ExtResource("1_fp4tp")
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="DEV"]
+[node name="Label6" type="Label" parent="DEV"]
 offset_right = 66.0
 offset_bottom = 23.0
 
-[node name="Label2" type="Label" parent="DEV"]
+[node name="Label" type="Label" parent="DEV"]
 offset_top = 27.0
 offset_right = 66.0
 offset_bottom = 50.0
 
-[node name="Label3" type="Label" parent="DEV"]
+[node name="Label2" type="Label" parent="DEV"]
 offset_top = 54.0
 offset_right = 66.0
 offset_bottom = 77.0
 
-[node name="Label4" type="Label" parent="DEV"]
+[node name="Label3" type="Label" parent="DEV"]
 offset_top = 81.0
 offset_right = 66.0
-offset_bottom = 107.0
+offset_bottom = 104.0
+
+[node name="Label4" type="Label" parent="DEV"]
+offset_top = 108.0
+offset_right = 66.0
+offset_bottom = 134.0
 text = "Lanched"
 
 [node name="Label5" type="Label" parent="DEV"]
-offset_top = 111.0
+offset_top = 138.0
 offset_right = 66.0
-offset_bottom = 134.0
+offset_bottom = 161.0
 
 [node name="Ammo" type="Label" parent="."]
 anchors_preset = 1
