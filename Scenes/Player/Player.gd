@@ -22,7 +22,7 @@ var canShoot = true
 var maxAmmo = 3
 var canJump = true
 
-const AnimStates = {WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall", RESET = "RESET"}
+const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
 var CUR_AnimState = 0
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = 0
@@ -69,12 +69,6 @@ func _stateMachines() -> void:
 			
 		MoveStates.SLIDE:
 			velocity.x = lerp(velocity.x,0.0,0.5)
-		
-		MoveStates.LEFT or MoveStates.RIGHT or MoveStates.SLIDE:
-			if CUR_GroundState != GroundStates.ONGROUND:
-				return
-			CUR_AnimState = AnimStates.WALK
-
 	match CUR_GroundState:
 		GroundStates.JUST_JUMP:
 			velocity.y = -jumpForce
@@ -98,13 +92,11 @@ func _stateMachines() -> void:
 			if not is_on_floor():
 				CUR_GroundState = GroundStates.FALL
 			launched = false
-			if CUR_MoveState in [MoveStates.LEFT,MoveStates.RIGHT,MoveStates.SLIDE]:
+			if CUR_MoveState != MoveStates.STOPED:
 				CUR_AnimState = AnimStates.WALK
-				return
-			CUR_AnimState = AnimStates.RESET
-		
+			else:
+				CUR_AnimState = AnimStates.RESET
 	BodyAnimState.travel(CUR_AnimState)
-		
 func _stateChecks() -> void:
 	
 	if Input.is_action_just_pressed("Jump"):
