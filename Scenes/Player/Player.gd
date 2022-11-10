@@ -9,7 +9,7 @@ var GunAnimState : AnimationNodeStateMachinePlayback
 @onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
 @onready var ReloadTimer = $ReloadTimer as Timer
 @onready var CoyoteTimer = $CoyoteTimer as Timer
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce = 300
 @export var walkSpeed = 400.0
@@ -22,11 +22,14 @@ var canShoot = true
 var maxAmmo = 3
 var canJump = true
 
+@export var coyote_max = 5
+var coyote = 0
+
 const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
-var CUR_AnimState = 0
+var CUR_AnimState = ""
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = 0
-enum GroundStates {FALL,JUMP,JUST_JUMP,LAND,ONGROUND}
+enum GroundStates {JUST_FELL,FALL,JUMP,JUST_JUMP,LAND,ONGROUND}
 var CUR_GroundState = 0
 var state = 0
 var animState = 0
@@ -38,23 +41,32 @@ func _ready():
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		if coyote >= coyote_max:
+			canJump = false
+			coyote = coyote_max
+		else:
+			coyote += 1
+	else:
+		coyote = 0
+		canJump = true
 	$Marker2d.look_at(get_global_mouse_position())
 	
 	GUI.groundstate = GroundStates.keys()[CUR_GroundState]
 	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
-	GUI.vel = velocity
+	GUI.vel = coyote
 	GUI.lauched = launched
 	GUI.ammo = ammo
 	GUI.canjump = CUR_AnimState
 	_stateChecks()
-	_stateMachines()
+	_stateMachines(delta)
 	move_and_slide()
-func _stateMachines() -> void:
+func _stateMachines(delta) -> void:
 	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
 		CUR_GroundState = GroundStates.LAND
 	
 	match CUR_MoveState:
+		
 		MoveStates.LEFT:
 			$Sprite2d.flip_h = true
 			if launched:
@@ -69,14 +81,19 @@ func _stateMachines() -> void:
 			
 		MoveStates.SLIDE:
 			velocity.x = lerp(velocity.x,0.0,0.5)
+		
 	match CUR_GroundState:
+		
 		GroundStates.JUST_JUMP:
 			velocity.y = -jumpForce
 			CUR_GroundState = GroundStates.JUMP
 			CUR_AnimState = AnimStates.JUMP
-		
+			ReloadTimer.stop()
+			
 		GroundStates.FALL:
 			CUR_AnimState = AnimStates.FALL
+			ReloadTimer.stop()
+			
 			
 		GroundStates.FALL or GroundStates.JUMP:
 			if is_on_floor():
@@ -86,9 +103,11 @@ func _stateMachines() -> void:
 		GroundStates.LAND:
 			CUR_GroundState = GroundStates.ONGROUND
 			ReloadTimer.start()
+			canJump = true
 			CUR_AnimState = AnimStates.LAND
 			
 		GroundStates.ONGROUND:
+			canJump = true
 			if not is_on_floor():
 				CUR_GroundState = GroundStates.FALL
 			launched = false
@@ -96,10 +115,14 @@ func _stateMachines() -> void:
 				CUR_AnimState = AnimStates.WALK
 			else:
 				CUR_AnimState = AnimStates.RESET
+
+
+		
 	BodyAnimState.travel(CUR_AnimState)
+	
 func _stateChecks() -> void:
 	
-	if Input.is_action_just_pressed("Jump"):
+	if Input.is_action_just_pressed("Jump") and canJump:
 		CUR_GroundState = GroundStates.JUST_JUMP
 	
 	if Input.is_action_just_pressed("Shoot") and canShoot:
