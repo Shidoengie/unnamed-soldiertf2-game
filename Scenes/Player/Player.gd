@@ -16,6 +16,8 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var walkSpeedmax
 var ammo = 3
+var launched = false
+var launchVec : Vector2
 var canShoot = true
 var maxAmmo = 3
 var canJump = true
@@ -40,7 +42,7 @@ func _physics_process(delta):
 	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
 	GUI.vel = velocity
-	GUI.lauched = false
+	GUI.lauched = launched
 	GUI.ammo = ammo
 	GUI.canjump = canJump
 	_stateChecks()
@@ -49,36 +51,48 @@ func _physics_process(delta):
 func _stateMachines() -> void:
 	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
 		CUR_GroundState = GroundStates.LAND
+
 	match CUR_MoveState:
 		MoveStates.LEFT:
-			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			$Sprite2d.flip_h = true
+			if launched:
+				velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
+			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+			
 			
 		MoveStates.RIGHT:
-			velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			$Sprite2d.flip_h = false
+			if launched:
+				velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1)
+			velocity.x = lerp(velocity.x,walkSpeed,0.1)
+			
 			
 		MoveStates.SLIDE:
 			velocity.x = lerp(velocity.x,0.0,0.5)
 			
-		
 	match CUR_GroundState:
 		GroundStates.JUST_JUMP:
 			velocity.y = -jumpForce
 			CUR_GroundState = GroundStates.JUMP
-			
+		
 		GroundStates.FALL or GroundStates.JUMP:
 			if is_on_floor():
 				CUR_GroundState = GroundStates.LAND
 			ReloadTimer.stop()
-			
+		
 		GroundStates.LAND:
 			CUR_GroundState = GroundStates.ONGROUND
 			ReloadTimer.start()
 		
 		GroundStates.ONGROUND:
-			pass
+			if not is_on_floor():
+				CUR_GroundState = GroundStates.FALL
+			launched = false
 func _stateChecks() -> void:
+	
+	if Input.is_action_just_pressed("Jump"):
+		CUR_GroundState = GroundStates.JUST_JUMP
+	
 	if Input.is_action_just_pressed("Shoot") and canShoot:
 		shoot()
 		
@@ -93,9 +107,6 @@ func _stateChecks() -> void:
 			CUR_MoveState = MoveStates.STOPED
 			return
 		CUR_MoveState = MoveStates.SLIDE
-		
-	if Input.is_action_just_pressed("Jump"):
-		CUR_GroundState = GroundStates.JUST_JUMP
 	
 func shoot() -> void:
 	if ammo <= 0 or not canShoot:
