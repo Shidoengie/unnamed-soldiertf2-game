@@ -9,109 +9,141 @@ var GunAnimState : AnimationNodeStateMachinePlayback
 @onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
 @onready var ReloadTimer = $ReloadTimer as Timer
 @onready var CoyoteTimer = $CoyoteTimer as Timer
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce = 300
 @export var walkSpeed = 400.0
 
-
-var isMoving = false
-var jumping = false
 var walkSpeedmax
 var ammo = 3
-var airSpeed = 50.0
-var launchVec = Vector2.ZERO
 var launched = false
+var launchVec : Vector2
 var canShoot = true
 var maxAmmo = 3
 var canJump = true
 
-enum {STOPED = 0,FALLING = 1,WALKING = 2, JUMP = 3}
-var anim_dict = {
-	0:"RESET",
-	1:"Fall",
-	2:"Walk",
-	3:"Jump"
-}
+@export var coyote_max = 5
+var coyote = 0
+
+const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
+var CUR_AnimState = ""
+enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
+var CUR_MoveState = 0
+enum GroundStates {JUST_FELL,FALL,JUMP,JUST_JUMP,LAND,ONGROUND}
+var CUR_GroundState = 0
 var state = 0
+var animState = 0
 
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
 	GunAnimState = $GunAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
 func _physics_process(delta):
-	
-	if BodyAnimState.get_current_node() == "Land":
-		ReloadTimer.start()
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		if coyote >= coyote_max:
+			canJump = false
+			coyote = coyote_max
+		else:
+			coyote += 1
+	else:
+		coyote = 0
+		canJump = true
 	$Marker2d.look_at(get_global_mouse_position())
 	
-	print(BodyAnimState.get_current_node())
-	if ["RESET","Walk"].has(BodyAnimState.get_current_node()) and anim_dict[state] == JUMP:
-		CoyoteTimer.start()
-	
-	BodyAnimState.travel(anim_dict[state])
-	GUI.states = state
+	GUI.groundstate = GroundStates.keys()[CUR_GroundState]
+	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
-	GUI.vel = velocity
+	GUI.vel = coyote
 	GUI.lauched = launched
 	GUI.ammo = ammo
-	GUI.canjump = canJump
+	GUI.canjump = CUR_AnimState
 	_stateChecks()
-	_playerControl()
-	Regen()
+	_stateMachines(delta)
 	move_and_slide()
+func _stateMachines(delta) -> void:
+	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
+		CUR_GroundState = GroundStates.LAND
 	
-func _stateChecks():
-	if is_on_floor():
-		canJump = true
-		if isMoving:
-			state = WALKING
-			walkSpeed = walkSpeedmax
-		if state == FALLING or not isMoving:
-			state = STOPED
-		launched = false
-		jumping = false
-	else:
-		ReloadTimer.stop()
-		CoyoteTimer.start()
-		if launched:
-			walkSpeed = airSpeed+abs(launchVec.x)
-		if jumping:
-			state = JUMP
-		else:
-			state = FALLING
-func _playerControl() -> void:
+	match CUR_MoveState:
+		
+		MoveStates.LEFT:
+			$Sprite2d.flip_h = true
+			if launched:
+				velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
+			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+			
+		MoveStates.RIGHT:
+			$Sprite2d.flip_h = false
+			if launched:
+				velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1)
+			velocity.x = lerp(velocity.x,walkSpeed,0.1)
+			
+		MoveStates.SLIDE:
+			velocity.x = lerp(velocity.x,0.0,0.5)
+		
+	match CUR_GroundState:
+		
+		GroundStates.JUST_JUMP:
+			velocity.y = -jumpForce
+			CUR_GroundState = GroundStates.JUMP
+			CUR_AnimState = AnimStates.JUMP
+			ReloadTimer.stop()
+			
+		GroundStates.FALL:
+			CUR_AnimState = AnimStates.FALL
+			ReloadTimer.stop()
+			
+			
+		GroundStates.FALL or GroundStates.JUMP:
+			if is_on_floor():
+				CUR_GroundState = GroundStates.LAND
+			ReloadTimer.stop()
+		
+		GroundStates.LAND:
+			CUR_GroundState = GroundStates.ONGROUND
+			ReloadTimer.start()
+			canJump = true
+			CUR_AnimState = AnimStates.LAND
+			
+		GroundStates.ONGROUND:
+			canJump = true
+			if not is_on_floor():
+				CUR_GroundState = GroundStates.FALL
+			launched = false
+			if CUR_MoveState != MoveStates.STOPED:
+				CUR_AnimState = AnimStates.WALK
+			else:
+				CUR_AnimState = AnimStates.RESET
+
+
+		
+	BodyAnimState.travel(CUR_AnimState)
+	
+func _stateChecks() -> void:
+	
+	if Input.is_action_just_pressed("Jump") and canJump:
+		CUR_GroundState = GroundStates.JUST_JUMP
+	
 	if Input.is_action_just_pressed("Shoot") and canShoot:
 		shoot()
+		
 	if Input.is_action_pressed("MoveLeft"):
-		if velocity.x > 0:
-			walkSpeed = walkSpeedmax
-			launched = false
-		velocity.x = lerp(velocity.x,-walkSpeed,0.1)
-		$Sprite2d.flip_h = true
-		isMoving = true
+		CUR_MoveState = MoveStates.LEFT
+		
 	elif Input.is_action_pressed("MoveRight"):
-		if velocity.x < 0:
-			walkSpeed = walkSpeedmax
-			launched = false
-		velocity.x = lerp(velocity.x,walkSpeed,0.1)
-		$Sprite2d.flip_h = false
-		isMoving = true
+		CUR_MoveState = MoveStates.RIGHT
+		
 	elif is_on_floor():
-		isMoving = false
-		velocity.x = lerp(velocity.x,0.0,0.3)
-	if Input.is_action_just_pressed("Jump") and canJump:
-		jumping = true
-		velocity.y = -jumpForce
-
-func Regen() -> void:
-	pass
-
+		if round(abs(velocity.x)) == 0:
+			CUR_MoveState = MoveStates.STOPED
+			return
+		CUR_MoveState = MoveStates.SLIDE
+	
 func shoot() -> void:
 	if ammo <= 0 or not canShoot:
 		return
+		
 	ammo -= 1
 	GunAnim.play("Shoot")
 	var bulletInstance = bullet.instantiate()
