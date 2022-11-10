@@ -22,6 +22,8 @@ var canShoot = true
 var maxAmmo = 3
 var canJump = true
 
+const AnimStates = {WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall", RESET = "RESET"}
+var CUR_AnimState = 0
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = 0
 enum GroundStates {FALL,JUMP,JUST_JUMP,LAND,ONGROUND}
@@ -44,14 +46,14 @@ func _physics_process(delta):
 	GUI.vel = velocity
 	GUI.lauched = launched
 	GUI.ammo = ammo
-	GUI.canjump = canJump
+	GUI.canjump = CUR_AnimState
 	_stateChecks()
 	_stateMachines()
 	move_and_slide()
 func _stateMachines() -> void:
 	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
 		CUR_GroundState = GroundStates.LAND
-
+	
 	match CUR_MoveState:
 		MoveStates.LEFT:
 			$Sprite2d.flip_h = true
@@ -59,22 +61,29 @@ func _stateMachines() -> void:
 				velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
 			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
-			
 		MoveStates.RIGHT:
 			$Sprite2d.flip_h = false
 			if launched:
 				velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1)
 			velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			
-			
 		MoveStates.SLIDE:
 			velocity.x = lerp(velocity.x,0.0,0.5)
-			
+		
+		MoveStates.LEFT or MoveStates.RIGHT or MoveStates.SLIDE:
+			if CUR_GroundState != GroundStates.ONGROUND:
+				return
+			CUR_AnimState = AnimStates.WALK
+
 	match CUR_GroundState:
 		GroundStates.JUST_JUMP:
 			velocity.y = -jumpForce
 			CUR_GroundState = GroundStates.JUMP
+			CUR_AnimState = AnimStates.JUMP
 		
+		GroundStates.FALL:
+			CUR_AnimState = AnimStates.FALL
+			
 		GroundStates.FALL or GroundStates.JUMP:
 			if is_on_floor():
 				CUR_GroundState = GroundStates.LAND
@@ -83,11 +92,19 @@ func _stateMachines() -> void:
 		GroundStates.LAND:
 			CUR_GroundState = GroundStates.ONGROUND
 			ReloadTimer.start()
-		
+			CUR_AnimState = AnimStates.LAND
+			
 		GroundStates.ONGROUND:
 			if not is_on_floor():
 				CUR_GroundState = GroundStates.FALL
 			launched = false
+			if CUR_MoveState in [MoveStates.LEFT,MoveStates.RIGHT,MoveStates.SLIDE]:
+				CUR_AnimState = AnimStates.WALK
+				return
+			CUR_AnimState = AnimStates.RESET
+		
+	BodyAnimState.travel(CUR_AnimState)
+		
 func _stateChecks() -> void:
 	
 	if Input.is_action_just_pressed("Jump"):
