@@ -8,7 +8,6 @@ var GunAnimState : AnimationNodeStateMachinePlayback
 @onready var GUI = get_parent().find_child("GUI")
 @onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
 @onready var ReloadTimer = $ReloadTimer as Timer
-@onready var CoyoteTimer = $CoyoteTimer as Timer
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce = 300
@@ -22,8 +21,8 @@ var canShoot = true
 var maxAmmo = 3
 var canJump = true
 
-@export var coyote_max = 5
-var coyote = 0
+@export var coyoteTimer_max = 5
+var coyoteTimer = 0
 
 const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
 var CUR_AnimState = ""
@@ -41,20 +40,20 @@ func _ready():
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		if coyote >= coyote_max:
+		if coyoteTimer >= coyoteTimer_max:
 			canJump = false
-			coyote = coyote_max
+			coyoteTimer = coyoteTimer_max
 		else:
-			coyote += 1
+			coyoteTimer += 1
 	else:
-		coyote = 0
+		coyoteTimer = 0
 		canJump = true
 	$Marker2d.look_at(get_global_mouse_position())
 	
 	GUI.groundstate = GroundStates.keys()[CUR_GroundState]
 	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
-	GUI.vel = coyote
+	GUI.vel = coyoteTimer
 	GUI.lauched = launched
 	GUI.ammo = ammo
 	GUI.canjump = CUR_AnimState
@@ -159,10 +158,6 @@ func _on_gun_anim_animation_started(anim_name):
 
 func _on_gun_anim_animation_finished(anim_name):
 	canShoot = true
-
-func _on_coyote_timer_timeout():
-	canJump = false
-
 func _on_reload_timer_timeout():
 	if ammo >= maxAmmo:
 		ReloadTimer.stop()
