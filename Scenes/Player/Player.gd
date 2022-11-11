@@ -28,7 +28,7 @@ const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Lan
 var CUR_AnimState = ""
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = 0
-enum GroundStates {JUST_FELL,FALL,JUMP,JUST_JUMP,LAND,ONGROUND}
+enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND}
 var CUR_GroundState = 0
 var state = 0
 var animState = 0
@@ -115,8 +115,6 @@ func _stateMachines(delta) -> void:
 			else:
 				CUR_AnimState = AnimStates.RESET
 
-
-		
 	BodyAnimState.travel(CUR_AnimState)
 	
 func _stateChecks() -> void:

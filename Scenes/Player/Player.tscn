@@ -334,7 +334,7 @@ position = Vector2(0, -8)
 collision_mask = 7
 script = ExtResource("1_3x8r0")
 jumpForce = 350
-coyote_max = 10
+coyoteTimer_max = 7
 
 [node name="ReloadTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -387,10 +387,6 @@ anim_player = NodePath("../GunAnim")
 active = true
 parameters/playback = SubResource("AnimationNodeStateMachinePlayback_xv574")
 
-[node name="CoyoteTimer" type="Timer" parent="."]
-one_shot = true
-
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
 [connection signal="animation_finished" from="GunAnim" to="." method="_on_gun_anim_animation_finished"]
 [connection signal="animation_started" from="GunAnim" to="." method="_on_gun_anim_animation_started"]
-[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
