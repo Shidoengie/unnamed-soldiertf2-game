@@ -67,25 +67,11 @@ func _stateMachines(delta) -> void:
 		
 		MoveStates.LEFT:
 			$Sprite2d.flip_h = true
-			if launched:
-				if velocity.x > 0:
-					launched = false
-					velocity.x = lerp(velocity.x,-walkSpeed,0.1)
-				else:
-					velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
-			else:
-				velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
 		MoveStates.RIGHT:
 			$Sprite2d.flip_h = false
-			if launched:
-				if velocity.x < 0:
-					launched = false
-					velocity.x = lerp(velocity.x,walkSpeed,0.1)
-				else:
-					velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1) 
-			else:
-				velocity.x = lerp(velocity.x,walkSpeed,0.1)
+			velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			
 		MoveStates.SLIDE:
 			if not is_on_floor():
@@ -144,8 +130,8 @@ func _stateChecks() -> void:
 	elif is_on_floor():
 		if round(abs(velocity.x)) == 0:
 			CUR_MoveState = MoveStates.STOPED
-			return
-		CUR_MoveState = MoveStates.SLIDE
+		else:
+			CUR_MoveState = MoveStates.SLIDE
 	
 func shoot() -> void:
 	if ammo <= 0 or not canShoot:
