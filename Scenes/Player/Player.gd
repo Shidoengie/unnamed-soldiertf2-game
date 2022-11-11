@@ -12,6 +12,7 @@ var GunAnimState : AnimationNodeStateMachinePlayback
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce = 300
 @export var walkSpeed = 400.0
+@export var airSpeed = 100.0
 
 var walkSpeedmax
 var ammo = 3
@@ -37,6 +38,11 @@ func _ready():
 	GunAnimState = $GunAnimTree.get("parameters/playback")
 	walkSpeedmax = walkSpeed
 func _physics_process(delta):
+	if launched:
+		walkSpeed = airSpeed+abs(launchVec.x)
+	else:
+		walkSpeed = walkSpeedmax
+
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		if coyoteTimer >= coyoteTimer_max:
@@ -45,37 +51,46 @@ func _physics_process(delta):
 		else:
 			coyoteTimer += 1
 	else:
+		launched = false
 		coyoteTimer = 0
 		canJump = true
+
 	$Marker2d.look_at(get_global_mouse_position())
 	
 	GUI.groundstate = GroundStates.keys()[CUR_GroundState]
 	GUI.movestate = MoveStates.keys()[CUR_MoveState]
 	GUI.walkspeed = walkSpeed
-	GUI.vel = coyoteTimer
+	GUI.vel = velocity
 	GUI.lauched = launched
 	GUI.ammo = ammo
 	GUI.canjump = CUR_AnimState
 	_stateChecks()
 	_stateMachines(delta)
 	move_and_slide()
+	
+
 func _stateMachines(delta) -> void:
 	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
 		CUR_GroundState = GroundStates.LAND
 	
 	match CUR_MoveState:
-		
 		MoveStates.LEFT:
+			if round(velocity.x) > 0:
+				launched = false
+				
 			$Sprite2d.flip_h = true
 			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
 		MoveStates.RIGHT:
+			if round(velocity.x) < 0:
+				launched = false
 			$Sprite2d.flip_h = false
 			velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			
 		MoveStates.SLIDE:
 			if not is_on_floor():
 				CUR_MoveState = MoveStates.STOPED
+				return
 			velocity.x = lerp(velocity.x,0.0,0.5)
 	match CUR_GroundState:
 		
