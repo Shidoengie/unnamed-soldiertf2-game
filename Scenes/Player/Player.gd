@@ -30,7 +30,6 @@ enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = 0
 enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND}
 var CUR_GroundState = 0
-var state = 0
 var animState = 0
 
 func _ready():
@@ -69,18 +68,29 @@ func _stateMachines(delta) -> void:
 		MoveStates.LEFT:
 			$Sprite2d.flip_h = true
 			if launched:
-				velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
-			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+				if velocity.x > 0:
+					launched = false
+					velocity.x = lerp(velocity.x,-walkSpeed,0.1)
+				else:
+					velocity.x = lerp(velocity.x,-walkSpeed + launchVec.x,0.1) 
+			else:
+				velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
 		MoveStates.RIGHT:
 			$Sprite2d.flip_h = false
 			if launched:
-				velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1)
-			velocity.x = lerp(velocity.x,walkSpeed,0.1)
+				if velocity.x < 0:
+					launched = false
+					velocity.x = lerp(velocity.x,walkSpeed,0.1)
+				else:
+					velocity.x = lerp(velocity.x,walkSpeed + launchVec.x,0.1) 
+			else:
+				velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			
 		MoveStates.SLIDE:
+			if not is_on_floor():
+				CUR_MoveState = MoveStates.STOPED
 			velocity.x = lerp(velocity.x,0.0,0.5)
-		
 	match CUR_GroundState:
 		
 		GroundStates.JUST_JUMP:

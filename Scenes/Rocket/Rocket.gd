@@ -17,7 +17,7 @@ func _on_animation_player_animation_finished(anim_name):
 	queue_free()
 func _on_explosion_rad_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
 	if body.name == "Player":
-		body.velocity += -moveDirection * explosionForce
+		body.velocity = -moveDirection * explosionForce
 		body.launchVec = -moveDirection * explosionForce
 		pass
 	elif body is RigidBody2D:
