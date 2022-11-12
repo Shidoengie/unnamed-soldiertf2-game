@@ -75,14 +75,14 @@ func _stateMachines(delta) -> void:
 	
 	match CUR_MoveState:
 		MoveStates.LEFT:
-			if round(velocity.x) > 0:
+			if launched and round(launchVec.x) > 0:
 				launched = false
 				
 			$Sprite2d.flip_h = true
 			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
 		MoveStates.RIGHT:
-			if round(velocity.x) < 0:
+			if launched and round(launchVec.x) < 0:
 				launched = false
 			$Sprite2d.flip_h = false
 			velocity.x = lerp(velocity.x,walkSpeed,0.1)
