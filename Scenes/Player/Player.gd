@@ -26,12 +26,14 @@ var canJump = true
 var coyoteTimer = 0
 
 const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
-var CUR_AnimState = ""
+var CUR_AnimState = AnimStates.RESET
+
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
-var CUR_MoveState = 0
+var CUR_MoveState = MoveStates.STOPED
+
 enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND}
-var CUR_GroundState = 0
-var animState = 0
+var CUR_GroundState = GroundStates.ONGROUND
+
 
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
@@ -56,14 +58,8 @@ func _physics_process(delta):
 		canJump = true
 
 	$Marker2d.look_at(get_global_mouse_position())
-	
-	GUI.groundstate = GroundStates.keys()[CUR_GroundState]
-	GUI.movestate = MoveStates.keys()[CUR_MoveState]
-	GUI.walkspeed = walkSpeed
-	GUI.vel = velocity
-	GUI.lauched = launched
-	GUI.ammo = ammo
-	GUI.canjump = CUR_AnimState
+	var dev = [GroundStates.keys()[CUR_GroundState],MoveStates.keys()[CUR_MoveState],walkSpeed,velocity,"Launched",launched,ammo,CUR_AnimState]
+	DEV_GUI(dev)
 	_stateChecks()
 	_stateMachines(delta)
 	move_and_slide()
@@ -172,3 +168,9 @@ func _on_reload_timer_timeout():
 		ReloadTimer.stop()
 		return
 	ammo += 1
+
+func DEV_GUI(varArr ):
+	var outString = ""
+	for i in varArr:
+		outString += str(i) + "\n"
+	GUI.groundstate = outString
