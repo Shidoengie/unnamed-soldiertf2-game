@@ -6,7 +6,7 @@ var GunAnimState : AnimationNodeStateMachinePlayback
 @onready var BodyAnimTree = $BodyAnimationTree as AnimationTree
 @onready var GunAnim = $GunAnim as AnimationPlayer
 @onready var GUI = get_parent().find_child("GUI")
-@onready var bullet = preload("res://Scenes/Rocket/Rocket.tscn")
+@onready var rocket = preload("res://Scenes/Rocket/Rocket.tscn")
 @onready var ReloadTimer = $ReloadTimer as Timer
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -15,14 +15,18 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var airSpeed = 100.0
 
 var walkSpeedmax
-var ammo = 3
 var launched = false
 var launchVec : Vector2
 var canShoot = true
+
+var ammo = 3
 var maxAmmo = 3
+
+#A Boolean flag to store if the player can jump this is mainly used for coyote jumps
 var canJump = true
 
-@export var coyoteTimer_max = 5
+#Coyote time variables
+@export var coyoteTimerMax = 5
 var coyoteTimer = 0
 
 const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
@@ -47,9 +51,9 @@ func _physics_process(delta):
 
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		if coyoteTimer >= coyoteTimer_max:
+		if coyoteTimer >= coyoteTimerMax:
 			canJump = false
-			coyoteTimer = coyoteTimer_max
+			coyoteTimer = coyoteTimerMax
 		else:
 			coyoteTimer += 1
 	else:
@@ -65,32 +69,44 @@ func _physics_process(delta):
 	_stateMachines(delta)
 	move_and_slide()
 	
+# Function containing all statemachines
 
 func _stateMachines(delta) -> void:
+	
+	#Logic For handling landing
+	#Checks if the player is touching the floor and if the player is in the falling or jumping state
+	
 	if (CUR_GroundState == GroundStates.FALL or CUR_GroundState == GroundStates.JUMP) and is_on_floor():
 		CUR_GroundState = GroundStates.LAND
 	
+	#Statemachine for handling horizontal movement along with interpolation for smooth movement
 	match CUR_MoveState:
 		MoveStates.LEFT:
 			if launched and round(launchVec.x) > 0:
+				#Checks if the player has been launched by a rocket launcher and if its going the oposite way
+				#then setting launched to false which resets the walkspeed
 				launched = false
-				
+			
 			$Sprite2d.flip_h = true
 			velocity.x = lerp(velocity.x,-walkSpeed,0.1)
 			
 		MoveStates.RIGHT:
 			if launched and round(launchVec.x) < 0:
+				#Same thing as Left but in an oposite direction 
 				launched = false
 			$Sprite2d.flip_h = false
 			velocity.x = lerp(velocity.x,walkSpeed,0.1)
 			
 		MoveStates.SLIDE:
 			if not is_on_floor():
+				#Checks if it isnt on the floor to alow for acurate rocket arches
 				CUR_MoveState = MoveStates.STOPED
 				return
 			velocity.x = lerp(velocity.x,0.0,0.5)
+	
 	match CUR_GroundState:
 		
+		#A single fire state used to apply the jump foce which makes the player jump
 		GroundStates.JUST_JUMP:
 			velocity.y = -jumpForce
 			CUR_GroundState = GroundStates.JUMP
@@ -100,19 +116,21 @@ func _stateMachines(delta) -> void:
 		GroundStates.FALL:
 			CUR_AnimState = AnimStates.FALL
 			ReloadTimer.stop()
-			
-			
+		
+		#Handles if the player has landed just touched the ground
 		GroundStates.FALL or GroundStates.JUMP:
 			if is_on_floor():
 				CUR_GroundState = GroundStates.LAND
 			ReloadTimer.stop()
 		
+		#A single fire state used to trigger reloading and restarting the coyote timer 
 		GroundStates.LAND:
 			CUR_GroundState = GroundStates.ONGROUND
 			ReloadTimer.start()
 			canJump = true
 			CUR_AnimState = AnimStates.LAND
 			
+		#groundstate for handling fall detection and onground animations
 		GroundStates.ONGROUND:
 			canJump = true
 			if not is_on_floor():
@@ -124,7 +142,8 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.RESET
 
 	BodyAnimState.travel(CUR_AnimState)
-	
+
+#Input Handling and some otherchecks to trigger states
 func _stateChecks() -> void:
 	
 	if Input.is_action_just_pressed("Jump") and canJump:
@@ -144,19 +163,20 @@ func _stateChecks() -> void:
 			CUR_MoveState = MoveStates.STOPED
 		else:
 			CUR_MoveState = MoveStates.SLIDE
-	
+
+#Handles ammo and rocket spawning 
 func shoot() -> void:
 	if ammo <= 0 or not canShoot:
 		return
-		
 	ammo -= 1
 	GunAnim.play("Shoot")
-	var bulletInstance = bullet.instantiate()
-	bulletInstance.moveDirection = Vector2.from_angle($Marker2d.rotation)
-	bulletInstance.find_child("Icon").rotation = $Marker2d.rotation
-	bulletInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
-	bulletInstance.position = $Marker2d/Hand.global_position
-	get_parent().add_child(bulletInstance)
+	#Spawns a rocket that then has its colision box, icon, and direction rotated to where the player is pointing
+	var rocketInstance = rocket.instantiate()
+	rocketInstance.moveDirection = Vector2.from_angle($Marker2d.rotation)
+	rocketInstance.find_child("Icon").rotation = $Marker2d.rotation
+	rocketInstance.find_child("CollisionShape2d").rotation = $Marker2d.rotation
+	rocketInstance.position = $Marker2d/Hand.global_position
+	get_parent().add_child(rocketInstance)
 
 
 func _on_gun_anim_animation_started(anim_name):
@@ -164,12 +184,14 @@ func _on_gun_anim_animation_started(anim_name):
 
 func _on_gun_anim_animation_finished(anim_name):
 	canShoot = true
+	
 func _on_reload_timer_timeout():
 	if ammo >= maxAmmo:
 		ReloadTimer.stop()
 		return
 	ammo += 1
 
+#Array parsing used for the Debug user interface
 func DEV_GUI(varArr ):
 	var outString = ""
 	for i in varArr:
