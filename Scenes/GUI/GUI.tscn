@@ -10,33 +10,28 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Label6" type="Label" parent="DEV"]
-layout_mode = 2
 offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="Label" type="Label" parent="DEV"]
-layout_mode = 2
 offset_top = 27.0
 offset_right = 40.0
 offset_bottom = 50.0
 
 [node name="Label2" type="Label" parent="DEV"]
 visible = false
-layout_mode = 2
 offset_top = 27.0
 offset_right = 66.0
 offset_bottom = 50.0
 
 [node name="Label3" type="Label" parent="DEV"]
 visible = false
-layout_mode = 2
 offset_top = 27.0
 offset_right = 66.0
 offset_bottom = 50.0
 
 [node name="Label4" type="Label" parent="DEV"]
 visible = false
-layout_mode = 2
 offset_top = 27.0
 offset_right = 66.0
 offset_bottom = 53.0
@@ -44,7 +39,6 @@ text = "Lanched"
 
 [node name="Label5" type="Label" parent="DEV"]
 visible = false
-layout_mode = 2
 offset_top = 27.0
 offset_right = 40.0
 offset_bottom = 50.0

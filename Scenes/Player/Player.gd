@@ -58,8 +58,9 @@ func _physics_process(delta):
 		canJump = true
 
 	$Marker2d.look_at(get_global_mouse_position())
-	var dev = [GroundStates.keys()[CUR_GroundState],MoveStates.keys()[CUR_MoveState],walkSpeed,velocity,"Launched",launched,ammo,CUR_AnimState]
+	var dev = [GroundStates.keys()[CUR_GroundState],MoveStates.keys()[CUR_MoveState],walkSpeed,velocity,"Launched",launched,CUR_AnimState]
 	DEV_GUI(dev)
+	GUI.ammo = ammo
 	_stateChecks()
 	_stateMachines(delta)
 	move_and_slide()
