@@ -29,6 +29,7 @@ var canJump = true
 @export var coyoteTimerMax = 5
 var coyoteTimer = 0
 
+#enums for statemachines that handle most of the player logic
 const AnimStates = {  RESET = "RESET", WALK = "Walk", JUMP = "Jump", LAND = "Land", FALL = "Fall"}
 var CUR_AnimState = AnimStates.RESET
 
