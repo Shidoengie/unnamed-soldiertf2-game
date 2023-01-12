@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://jnl7sck3w5ra"]
+[gd_scene load_steps=28 format=3 uid="uid://jnl7sck3w5ra"]
 
 [ext_resource type="Script" path="res://Scenes/Player/Player.gd" id="1_3x8r0"]
 [ext_resource type="Texture2D" uid="uid://3rqih43y5sbk" path="res://Scenes/Player/Assets/Walk.png" id="2_lluym"]
@@ -269,74 +269,11 @@ _data = {
 "Walk": SubResource("Animation_na6da")
 }
 
-[sub_resource type="Animation" id="Animation_qmfv3"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Marker2d/Polygon2d:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(11, -27)]
-}
-
-[sub_resource type="Animation" id="Animation_bul31"]
-resource_name = "Shoot"
-length = 0.1
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Marker2d/Polygon2d:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.03, 0.1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(11, -27), Vector2(0, -27), Vector2(11, -27)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cudak"]
-_data = {
-"RESET": SubResource("Animation_qmfv3"),
-"Shoot": SubResource("Animation_bul31")
-}
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tia71"]
-animation = &"RESET"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h7sx1"]
-animation = &"Shoot"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7v3g4"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tjv0l"]
-switch_mode = 1
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ormj7"]
-states/End/position = Vector2(64, 81.3333)
-states/RESET/node = SubResource("AnimationNodeAnimation_tia71")
-states/RESET/position = Vector2(397.333, 103.333)
-states/Shoot/node = SubResource("AnimationNodeAnimation_h7sx1")
-states/Shoot/position = Vector2(533.333, 102.988)
-states/Start/position = Vector2(158.667, 108)
-transitions = ["RESET", "Shoot", SubResource("AnimationNodeStateMachineTransition_7v3g4"), "Shoot", "RESET", SubResource("AnimationNodeStateMachineTransition_tjv0l")]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_xv574"]
-
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(0, -8)
 collision_mask = 7
 script = ExtResource("1_3x8r0")
 jumpForce = 350
-
-[node name="ReloadTimer" type="Timer" parent="."]
-wait_time = 0.5
 
 [node name="Sprite2d" type="Sprite2D" parent="."]
 position = Vector2(0, -16)
@@ -363,29 +300,5 @@ libraries = {
 "": SubResource("AnimationLibrary_gt154")
 }
 
-[node name="Marker2d" type="Marker2D" parent="."]
-
-[node name="Polygon2d" type="Polygon2D" parent="Marker2d"]
-position = Vector2(11, -27)
-polygon = PackedVector2Array(0, 24, 24, 24, 24, 32, 0, 32)
-
-[node name="Hand" type="Marker2D" parent="Marker2d"]
-position = Vector2(35, 1)
-
 [node name="Feet" type="Marker2D" parent="."]
 position = Vector2(0, 24)
-
-[node name="GunAnim" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_cudak")
-}
-
-[node name="GunAnimTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_ormj7")
-anim_player = NodePath("../GunAnim")
-active = true
-parameters/playback = SubResource("AnimationNodeStateMachinePlayback_xv574")
-
-[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
-[connection signal="animation_finished" from="GunAnim" to="." method="_on_gun_anim_animation_finished"]
-[connection signal="animation_started" from="GunAnim" to="." method="_on_gun_anim_animation_started"]
