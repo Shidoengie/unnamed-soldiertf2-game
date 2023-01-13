@@ -9,7 +9,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var walkSpeed = 400.0
 @export var airSpeed = 100.0
 
-var walkSpeedmax
+var base_walkSpeed
 var launchVec : Vector2
 var canShoot = true
 
@@ -31,11 +31,11 @@ var CUR_MoveState = MoveStates.STOPED
 enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND}
 var CUR_GroundState = GroundStates.ONGROUND
 
-enum SpeedStates {LAUNCHED = 0,ONAIR = 100,ONGROUND = 400}
-var CUR_SpeedState = SpeedStates.ONGROUND 
+enum SpeedStates {LAUNCHED,ONAIR,ONGROUND}
+var CUR_SpeedState = SpeedStates.ONGROUND
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
-	walkSpeedmax = walkSpeed
+	base_walkSpeed = walkSpeed
 func _physics_process(delta):
 
 	if not is_on_floor():
@@ -54,9 +54,8 @@ func _physics_process(delta):
 	var dev = [
 		GroundStates.keys()[CUR_GroundState],
 		MoveStates.keys()[CUR_MoveState],
-		SpeedStates.keys()[SpeedStates.values().find(CUR_SpeedState)],
+		SpeedStates.keys()[CUR_SpeedState],
 		walkSpeed,
-		CUR_SpeedState,
 		velocity,
 		"CanJump",canJump,
 		CUR_AnimState,
@@ -99,7 +98,13 @@ func _stateMachines(delta) -> void:
 				#Checks if it isnt on the floor to alow for acurate rocket arches
 				CUR_MoveState = MoveStates.STOPED
 				return
-			velocity.x = lerp(velocity.x,0.0,0.5)
+			match CUR_SpeedState:
+				SpeedStates.ONGROUND:
+					velocity.x = lerp(velocity.x,0.0,0.5)
+				SpeedStates.ONAIR:
+					velocity.x = lerp(velocity.x,0.0,0.1)
+				_:
+					pass
 	
 	match CUR_GroundState:
 		
@@ -140,7 +145,7 @@ func _stateMachines(delta) -> void:
 	if CUR_SpeedState == SpeedStates.LAUNCHED:
 		walkSpeed = airSpeed+abs(launchVec.x)
 	else:
-		walkSpeed = CUR_SpeedState
+		walkSpeed = base_walkSpeed
 		
 	BodyAnimState.travel(CUR_AnimState)
 
@@ -160,11 +165,10 @@ func _stateChecks() -> void:
 		if is_on_floor():
 			if round(abs(velocity.x)) == 0:
 				CUR_MoveState = MoveStates.STOPED
-			else:
-				CUR_MoveState = MoveStates.SLIDE
+				return
+			CUR_MoveState = MoveStates.SLIDE
 		else:
 			CUR_MoveState = MoveStates.SLIDE
-
 #Array parsing used for the Debug user interface
 func DEV_GUI(varArr ):
 	var outString = ""
