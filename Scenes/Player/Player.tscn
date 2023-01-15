@@ -65,7 +65,7 @@ switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ua1fw"]
 states/Crouch_Walk/node = SubResource("AnimationNodeAnimation_y7etl")
-states/Crouch_Walk/position = Vector2(884.333, 13.4942)
+states/Crouch_Walk/position = Vector2(757.667, 21.2797)
 states/Crouch_idle/node = SubResource("AnimationNodeAnimation_w0xu1")
 states/Crouch_idle/position = Vector2(487.44, 22.3333)
 states/End/position = Vector2(289.333, 81.2026)
@@ -81,7 +81,7 @@ states/Start/position = Vector2(186.222, 82.1996)
 states/Walk/node = SubResource("AnimationNodeAnimation_c2513")
 states/Walk/position = Vector2(884.296, 126.971)
 transitions = ["Jump", "Land", SubResource("AnimationNodeStateMachineTransition_3xvsb"), "Land", "RESET", SubResource("AnimationNodeStateMachineTransition_jm471"), "RESET", "Jump", SubResource("AnimationNodeStateMachineTransition_e42fi"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_qbv1s"), "RESET", "Fall", SubResource("AnimationNodeStateMachineTransition_0rckv"), "Walk", "RESET", SubResource("AnimationNodeStateMachineTransition_urt55"), "RESET", "Walk", SubResource("AnimationNodeStateMachineTransition_2p7dh"), "RESET", "Crouch_idle", SubResource("AnimationNodeStateMachineTransition_g7y24"), "Crouch_idle", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_e2v6i"), "Crouch_idle", "RESET", SubResource("AnimationNodeStateMachineTransition_w1eo5"), "Crouch_Walk", "RESET", SubResource("AnimationNodeStateMachineTransition_f4v46"), "RESET", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_w2jtj"), "Crouch_Walk", "Crouch_idle", SubResource("AnimationNodeStateMachineTransition_68b7p")]
-graph_offset = Vector2(119, -41)
+graph_offset = Vector2(124, 8)
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_fmul5"]
 

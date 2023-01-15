@@ -17,7 +17,7 @@ var canShoot := true
 var canJump = true
 
 #Coyote time variables
-@export var coyoteTimerMax = 5
+@export var coyoteTimerMax = 6
 var coyoteTimer = 0
 
 #enums for statemachines that handle most of the player logic
@@ -69,7 +69,7 @@ func _physics_process(delta):
 		
 		if coyoteTimer >= coyoteTimerMax:
 			canJump = false
-			coyoteTimer = coyoteTimerMax
+			coyoteTimer = 0
 		else:
 			coyoteTimer += 1
 	else:
@@ -192,9 +192,8 @@ func _stateChecks() -> void:
 			
 		if Input.is_action_just_released("Crouch"):
 			CUR_GroundState = GroundStates.ONGROUND
-
-		if Input.is_action_just_pressed("Jump") and canJump:
-			CUR_GroundState = GroundStates.JUST_JUMP
+	if Input.is_action_just_pressed("Jump") and canJump:
+		CUR_GroundState = GroundStates.JUST_JUMP
 
 	if Input.is_action_pressed("MoveLeft"):
 		CUR_MoveState = MoveStates.LEFT
@@ -210,7 +209,7 @@ func _stateChecks() -> void:
 		CUR_MoveState = MoveStates.SLIDE
 
 #Array parsing used for the Debug user interface
-func DEV_GUI(varArr ):
+func DEV_GUI(varArr):
 	var outString = ""
 	for i in varArr:
 		outString += str(i) + "\n"
