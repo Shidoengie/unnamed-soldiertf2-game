@@ -472,6 +472,7 @@ sources/1 = SubResource("TileSetAtlasSource_m52nm")
 sources/4 = SubResource("TileSetAtlasSource_ccbya")
 
 [node name="Node2d" type="Node2D"]
+metadata/_edit_vertical_guides_ = []
 
 [node name="Area2d" type="Area2D" parent="."]
 position = Vector2(40, 512)
