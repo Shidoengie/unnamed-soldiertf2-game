@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ds2vg15rh7k4u"
-path="res://.godot/imported/Fall.png-cd52248c0fe942352b65399c67a40d1c.ctex"
+uid="uid://vtaf5ij1an7a"
+path="res://.godot/imported/Crouch_walk.png-c2c99eae8f4b5f325e27e9d94dfe97d1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Nova pasta/Fall.png"
-dest_files=["res://.godot/imported/Fall.png-cd52248c0fe942352b65399c67a40d1c.ctex"]
+source_file="res://Scenes/Player/Assets/Crouch_walk.png"
+dest_files=["res://.godot/imported/Crouch_walk.png-c2c99eae8f4b5f325e27e9d94dfe97d1.ctex"]
 
 [params]
 

@@ -28,7 +28,7 @@ var CUR_AnimState = AnimStates.RESET
 enum MoveStates {LEFT,RIGHT,SLIDE,STOPED}
 var CUR_MoveState = MoveStates.STOPED
 
-enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND}
+enum GroundStates {ONGROUND,JUST_FELL,FALL,JUMP,JUST_JUMP,LAND,CROUCH}
 var CUR_GroundState = GroundStates.ONGROUND
 
 enum SpeedStates {LAUNCHED,ONAIR,ONGROUND}
@@ -103,9 +103,7 @@ func _stateMachines(delta) -> void:
 					velocity.x = lerp(velocity.x,0.0,0.5)
 				SpeedStates.ONAIR:
 					velocity.x = lerp(velocity.x,0.0,0.1)
-				_:
-					pass
-	
+					
 	match CUR_GroundState:
 		
 		#A single fire state used to apply the jump foce which makes the player jump
@@ -117,8 +115,6 @@ func _stateMachines(delta) -> void:
 			
 		GroundStates.FALL:
 			CUR_AnimState = AnimStates.FALL
-			
-		
 		#Handles if the player has landed just touched the ground
 		GroundStates.FALL or GroundStates.JUMP:
 			if is_on_floor():
@@ -127,7 +123,6 @@ func _stateMachines(delta) -> void:
 		#A single fire state used to trigger reloading and restarting the coyote timer 
 		GroundStates.LAND:
 			CUR_GroundState = GroundStates.ONGROUND
-			
 			canJump = true
 			CUR_AnimState = AnimStates.LAND
 			
@@ -141,7 +136,8 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.WALK
 			else:
 				CUR_AnimState = AnimStates.RESET
-	
+		GroundStates.CROUCH:
+			pass
 	if CUR_SpeedState == SpeedStates.LAUNCHED:
 		walkSpeed = airSpeed+abs(launchVec.x)
 	else:
@@ -151,7 +147,6 @@ func _stateMachines(delta) -> void:
 
 #Input Handling and some otherchecks to trigger states
 func _stateChecks() -> void:
-	
 	if Input.is_action_just_pressed("Jump") and canJump:
 		CUR_GroundState = GroundStates.JUST_JUMP
 		
@@ -162,13 +157,11 @@ func _stateChecks() -> void:
 		CUR_MoveState = MoveStates.RIGHT
 		
 	else:
-		if is_on_floor():
-			if round(abs(velocity.x)) == 0:
-				CUR_MoveState = MoveStates.STOPED
-				return
-			CUR_MoveState = MoveStates.SLIDE
-		else:
-			CUR_MoveState = MoveStates.SLIDE
+		if is_on_floor() and round(abs(velocity.x)) == 0:
+			CUR_MoveState = MoveStates.STOPED
+			velocity.x = 0
+			return
+		CUR_MoveState = MoveStates.SLIDE
 #Array parsing used for the Debug user interface
 func DEV_GUI(varArr ):
 	var outString = ""

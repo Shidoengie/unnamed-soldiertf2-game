@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btub1h5eet1la"
-path="res://.godot/imported/Walk.png-0036c799defb4b62d828fbbe09f21bdb.ctex"
+uid="uid://bfcb5twquv6g6"
+path="res://.godot/imported/unknown.png-9d9cad4f1fe2d782835b2be3721b6022.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Nova pasta/Walk.png"
-dest_files=["res://.godot/imported/Walk.png-0036c799defb4b62d828fbbe09f21bdb.ctex"]
+source_file="res://Level Assets/unknown.png"
+dest_files=["res://.godot/imported/unknown.png-9d9cad4f1fe2d782835b2be3721b6022.ctex"]
 
 [params]
 

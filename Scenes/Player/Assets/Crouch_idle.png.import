@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyj73n78xwviu"
-path="res://.godot/imported/jump.png-f06d7561946db1bc72282c1e265b2cb1.ctex"
+uid="uid://c5o17b3mba5gv"
+path="res://.godot/imported/Crouch_idle.png-5457f70e8e0cf9c7b90805cd87c97935.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Nova pasta/jump.png"
-dest_files=["res://.godot/imported/jump.png-f06d7561946db1bc72282c1e265b2cb1.ctex"]
+source_file="res://Scenes/Player/Assets/Crouch_idle.png"
+dest_files=["res://.godot/imported/Crouch_idle.png-5457f70e8e0cf9c7b90805cd87c97935.ctex"]
 
 [params]
 

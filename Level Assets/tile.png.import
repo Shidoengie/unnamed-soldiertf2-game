@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4l2hxsyl7cgp"
-path="res://.godot/imported/PLACE.png-54f88c22a9681a89957791ed1cb6ea2f.ctex"
+uid="uid://b31lxs3wjs4o1"
+path="res://.godot/imported/tile.png-0d05669322f9097adadc040adbd2017e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Nova pasta/PLACE.png"
-dest_files=["res://.godot/imported/PLACE.png-54f88c22a9681a89957791ed1cb6ea2f.ctex"]
+source_file="res://Level Assets/tile.png"
+dest_files=["res://.godot/imported/tile.png-0d05669322f9097adadc040adbd2017e.ctex"]
 
 [params]
 
