@@ -5,10 +5,12 @@ var BodyAnimState : AnimationNodeStateMachinePlayback
 @onready var BodyAnimTree := $BodyAnimationTree as AnimationTree
 @onready var GUI := get_parent().find_child("GUI")
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+@export var crouchCamscroll = -100
 @export var jumpForce := 300
 @export var moveSpeed = 400.0
 @export var airSpeed := 100.0
-
+@onready var Camera := $Camera2d
+@onready var Base_CameraPos = $Camera2d.position as Vector2
 var launchVec : Vector2
 var canShoot := true
 
@@ -157,7 +159,7 @@ func _stateMachines(delta) -> void:
 
 		#groundstate for handling fall detection and onground animations
 		GroundStates.ONGROUND:
-			
+			Camera.position = Base_CameraPos
 			canJump = true
 			if not is_on_floor():
 				CUR_GroundState = GroundStates.FALL
@@ -167,7 +169,8 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.WALK
 			else:
 				CUR_AnimState = AnimStates.RESET
-
+		not GroundStates.CROUCH:
+			Camera.position = Base_CameraPos
 		GroundStates.CROUCH:
 			CUR_SlideState = SlideStates.CROUCH
 			CUR_SpeedValue = SpeedValues.CROUCH
@@ -175,7 +178,7 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.CROUCH_WALK
 			else:
 				CUR_AnimState = AnimStates.CROUCH_IDLE
- 
+			Camera.position.y = -100
 	if CUR_SlideState == SlideStates.LAUNCHED:
 		moveSpeed = airSpeed+abs(launchVec.x)
 	else:
@@ -192,6 +195,11 @@ func _stateChecks() -> void:
 			
 		if Input.is_action_just_released("Crouch"):
 			CUR_GroundState = GroundStates.ONGROUND
+			
+	else:
+		if CUR_GroundState == GroundStates.CROUCH:
+			CUR_GroundState = GroundStates.FALL
+		Camera.position = Base_CameraPos
 	if Input.is_action_just_pressed("Jump") and canJump:
 		CUR_GroundState = GroundStates.JUST_JUMP
 
