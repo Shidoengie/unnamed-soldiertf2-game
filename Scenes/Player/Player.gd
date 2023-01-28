@@ -19,7 +19,7 @@ var canShoot := true
 var canJump = true
 
 #Coyote time variables
-@export var coyoteTimerMax = 6
+@export var coyoteTimerMax = 0.1
 var coyoteTimer = 0
 
 #enums for statemachines that handle most of the player logic
@@ -30,7 +30,7 @@ const AnimStates = {
 	LAND = "Land",
 	FALL = "Fall" ,
 	CROUCH_IDLE = "Crouch_idle",
-	CROUCH_WALK = "Crouch_Walk"
+	CROUCH_WALK = "Crouch_Walk",
 }
 var CUR_AnimState = AnimStates.RESET
 
@@ -48,6 +48,11 @@ enum GroundStates {
 }
 var CUR_GroundState = GroundStates.ONGROUND
 
+@onready var CameraValues = {
+	CROUCH = Vector2(0,100) + Base_CameraPos,
+	LOOK_DOWN = Vector2(0,100) + Base_CameraPos, LOOK_UP = Vector2(0,-100) + Base_CameraPos,
+}
+
 enum SpeedValues {
 	WALK = 300,
 	CROUCH = 100,
@@ -62,24 +67,24 @@ func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
 
 func _physics_process(delta):
-	
-	
+
+
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		if CUR_SlideState != SlideStates.LAUNCHED:
 			CUR_SlideState = SlideStates.ONAIR
-		
+
 		if coyoteTimer >= coyoteTimerMax:
 			canJump = false
 			coyoteTimer = 0
 		else:
-			coyoteTimer += 1
+			coyoteTimer += delta
 	else:
 		coyoteTimer = 0
 		canJump = true
 		if CUR_SlideState != SlideStates.CROUCH:
 			CUR_SlideState = SlideStates.ONGROUND
-	
+
 	var dev = [
 	GroundStates.keys()[CUR_GroundState],
 	MoveStates.keys()[CUR_MoveState],
@@ -88,6 +93,8 @@ func _physics_process(delta):
 	velocity,
 	"CanJump",canJump,
 	CUR_AnimState,
+	Camera.position,
+	delta
 	]
 	DEV_GUI(dev)
 	_stateChecks()
@@ -159,7 +166,7 @@ func _stateMachines(delta) -> void:
 
 		#groundstate for handling fall detection and onground animations
 		GroundStates.ONGROUND:
-			Camera.position = Base_CameraPos
+
 			canJump = true
 			if not is_on_floor():
 				CUR_GroundState = GroundStates.FALL
@@ -169,8 +176,6 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.WALK
 			else:
 				CUR_AnimState = AnimStates.RESET
-		not GroundStates.CROUCH:
-			Camera.position = Base_CameraPos
 		GroundStates.CROUCH:
 			CUR_SlideState = SlideStates.CROUCH
 			CUR_SpeedValue = SpeedValues.CROUCH
@@ -178,7 +183,10 @@ func _stateMachines(delta) -> void:
 				CUR_AnimState = AnimStates.CROUCH_WALK
 			else:
 				CUR_AnimState = AnimStates.CROUCH_IDLE
-			Camera.position.y = -100
+			Camera.position = CameraValues.CROUCH
+		_:
+			pass
+#end of statemachines
 	if CUR_SlideState == SlideStates.LAUNCHED:
 		moveSpeed = airSpeed+abs(launchVec.x)
 	else:
@@ -188,18 +196,26 @@ func _stateMachines(delta) -> void:
 
 #Input Handling and checks to trigger states
 func _stateChecks() -> void:
+
+	if Input.is_action_pressed("look_down"):
+		Camera.position = CameraValues.LOOK_DOWN
+	elif Input.is_action_pressed("look_up"):
+		Camera.position = CameraValues.LOOK_UP
+	elif CUR_GroundState != GroundStates.CROUCH:
+		Camera.position = Base_CameraPos
+	
 	if is_on_floor():
 		CUR_SlideState = SlideStates.ONGROUND
 		if Input.is_action_pressed("Crouch"):
 			CUR_GroundState = GroundStates.CROUCH
-			
+
 		if Input.is_action_just_released("Crouch"):
 			CUR_GroundState = GroundStates.ONGROUND
-			
+
 	else:
 		if CUR_GroundState == GroundStates.CROUCH:
 			CUR_GroundState = GroundStates.FALL
-		Camera.position = Base_CameraPos
+
 	if Input.is_action_just_pressed("Jump") and canJump:
 		CUR_GroundState = GroundStates.JUST_JUMP
 
@@ -222,3 +238,8 @@ func DEV_GUI(varArr):
 	for i in varArr:
 		outString += str(i) + "\n"
 	GUI.groundstate = outString
+
+
+
+func _on_tick_timeout():
+	pass # Replace with function body.
