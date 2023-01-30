@@ -3,9 +3,9 @@ extends CharacterBody2D
 
 var BodyAnimState : AnimationNodeStateMachinePlayback
 @onready var BodyAnimTree := $BodyAnimationTree as AnimationTree
+#@onready var CrouchClipCheck := $CrouchClipCheck as ShapeCast2D
 @onready var GUI := get_parent().find_child("GUI")
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-@export var crouchCamscroll = -100
 @export var jumpForce := 300
 @export var moveSpeed = 400.0
 @export var airSpeed := 100.0
@@ -68,7 +68,7 @@ func _ready():
 
 func _physics_process(delta):
 
-
+#
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		if CUR_SlideState != SlideStates.LAUNCHED:
@@ -94,7 +94,8 @@ func _physics_process(delta):
 	"CanJump",canJump,
 	CUR_AnimState,
 	Camera.position,
-	delta
+	delta,
+	"IsonSeiling"
 	]
 	DEV_GUI(dev)
 	_stateChecks()
@@ -243,3 +244,5 @@ func DEV_GUI(varArr):
 
 func _on_tick_timeout():
 	pass # Replace with function body.
+
+
