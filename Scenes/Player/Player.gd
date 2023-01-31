@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 var BodyAnimState : AnimationNodeStateMachinePlayback
 @onready var BodyAnimTree := $BodyAnimationTree as AnimationTree
-#@onready var CrouchClipCheck := $CrouchClipCheck as ShapeCast2D
+@onready var CrouchClipCheck := $CrouchClipCheck as ShapeCast2D
 @onready var GUI := get_parent().find_child("GUI")
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var jumpForce := 300
@@ -105,7 +105,8 @@ func _physics_process(delta):
 # Function containing all statemachines
 
 func _stateMachines(delta) -> void:
-
+	
+	var PREV_animState = CUR_AnimState
 	#Logic For handling landing
 	#Checks if the player is touching the floor and if the player is in the falling or jumping state
 
@@ -187,13 +188,14 @@ func _stateMachines(delta) -> void:
 			Camera.position = CameraValues.CROUCH
 		_:
 			pass
+			
 #end of statemachines
 	if CUR_SlideState == SlideStates.LAUNCHED:
 		moveSpeed = airSpeed+abs(launchVec.x)
 	else:
 		moveSpeed = CUR_SpeedValue
-
-	BodyAnimState.travel(CUR_AnimState)
+	if PREV_animState != CUR_AnimState:
+		BodyAnimState.travel(CUR_AnimState)
 
 #Input Handling and checks to trigger states
 func _stateChecks() -> void:
