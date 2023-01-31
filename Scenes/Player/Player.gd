@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-
 var BodyAnimState : AnimationNodeStateMachinePlayback
 @onready var BodyAnimTree := $BodyAnimationTree as AnimationTree
 @onready var CrouchClipCheck := $CrouchClipCheck as ShapeCast2D
@@ -105,7 +104,7 @@ func _physics_process(delta):
 # Function containing all statemachines
 
 func _stateMachines(delta) -> void:
-	
+
 	var PREV_animState = CUR_AnimState
 	#Logic For handling landing
 	#Checks if the player is touching the floor and if the player is in the falling or jumping state
@@ -188,7 +187,7 @@ func _stateMachines(delta) -> void:
 			Camera.position = CameraValues.CROUCH
 		_:
 			pass
-			
+
 #end of statemachines
 	if CUR_SlideState == SlideStates.LAUNCHED:
 		moveSpeed = airSpeed+abs(launchVec.x)
@@ -206,18 +205,8 @@ func _stateChecks() -> void:
 		Camera.position = CameraValues.LOOK_UP
 	elif CUR_GroundState != GroundStates.CROUCH:
 		Camera.position = Base_CameraPos
-	
-	if is_on_floor():
-		CUR_SlideState = SlideStates.ONGROUND
-		if Input.is_action_pressed("Crouch"):
-			CUR_GroundState = GroundStates.CROUCH
 
-		if Input.is_action_just_released("Crouch"):
-			CUR_GroundState = GroundStates.ONGROUND
-
-	else:
-		if CUR_GroundState == GroundStates.CROUCH:
-			CUR_GroundState = GroundStates.FALL
+	_crouch()
 
 	if Input.is_action_just_pressed("Jump") and canJump:
 		CUR_GroundState = GroundStates.JUST_JUMP
@@ -234,6 +223,20 @@ func _stateChecks() -> void:
 			velocity.x = 0
 			return
 		CUR_MoveState = MoveStates.SLIDE
+
+func _crouch():
+	if not is_on_floor():
+		if CUR_GroundState == GroundStates.CROUCH:
+			CUR_GroundState = GroundStates.FALL
+		return
+
+	CUR_SlideState = SlideStates.ONGROUND
+	canJump = false if CrouchClipCheck.is_colliding() else canJump
+	if Input.is_action_pressed("Crouch"):
+		CUR_GroundState = GroundStates.CROUCH
+	elif not CrouchClipCheck.is_colliding():
+		CUR_GroundState = GroundStates.ONGROUND
+
 
 #Array parsing used for the Debug user interface
 func DEV_GUI(varArr):
