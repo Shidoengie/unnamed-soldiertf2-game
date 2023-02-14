@@ -8,8 +8,8 @@ func stateMachine(player):
 	current_name = names[int(current)]
 	match current:
 		ONGROUND:
-			Global.playerVelocity.x = lerp(Global.playerVelocity.x,0.0,0.5)
+			Global.player.velocity.x = lerp(Global.player.velocity.x,0.0,0.5)
 		ONAIR:
-			Global.playerVelocity.x = lerp(Global.playerVelocity.x,0.0,0.1)
+			Global.player.velocity.x = lerp(Global.player.velocity.x,0.0,0.1)
 		CROUCH:
-			Global.playerVelocity.x = lerp(Global.playerVelocity.x,0.0,0.5)
+			Global.player.velocity.x = lerp(Global.player.velocity.x,0.0,0.5)

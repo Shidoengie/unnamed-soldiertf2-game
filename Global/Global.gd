@@ -1,3 +1,3 @@
 extends Node
 
-var playerVelocity:Vector2
+var player:CharacterBody2D

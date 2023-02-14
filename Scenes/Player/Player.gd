@@ -36,13 +36,13 @@ var coyoteTimer = 0
 
 func _ready():
 	BodyAnimState = BodyAnimTree.get("parameters/playback")
-
+	Global.player = self
 func _physics_process(delta):
 	
 #
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		Global.playerVelocity = velocity
+		velocity = velocity
 		if SlideStates.current != SlideStates.LAUNCHED:
 			SlideStates.current = SlideStates.ONAIR
 
@@ -62,7 +62,7 @@ func _physics_process(delta):
 	MoveStates.current_name,
 	SlideStates.current_name,
 	moveSpeed,
-	Global.playerVelocity,
+	velocity,
 	"CanJump",canJump,
 	AnimStates.current,
 	Camera.position,
@@ -72,7 +72,7 @@ func _physics_process(delta):
 	DEV_GUI(dev)
 	_stateChecks()
 	_stateMachines(delta)
-	velocity = Global.playerVelocity
+	velocity = velocity
 	move_and_slide()
 	
 # Function containing all statemachines
@@ -84,8 +84,8 @@ func _stateMachines(delta) -> void:
 	#Checks if the player is touching the floor and if the player is in the falling or jumping stat
 	if (GroundStates.current == GroundStates.FALL or GroundStates.current == GroundStates.JUMP) and is_on_floor():
 		GroundStates.current = GroundStates.LAND
-	GroundStates.stateMachine(self)
-	MoveStates.stateMachine(self)
+	GroundStates.stateMachine()
+	MoveStates.stateMachine()
 	if SlideStates.current == SlideStates.LAUNCHED:
 		moveSpeed = PlayerStats.airSpeed+abs(launchVec.x)
 	else:
@@ -113,9 +113,9 @@ func _stateChecks() -> void:
 		MoveStates.current = MoveStates.RIGHT
 	#The function of the else is to check if the player is pressing any directional keys
 	else:
-		if is_on_floor() and round(abs(Global.playerVelocity.x)) == 0:
+		if is_on_floor() and round(abs(velocity.x)) == 0:
 			MoveStates.current = MoveStates.STOPED
-			Global.playerVelocity.x = 0
+			velocity.x = 0
 			return
 		MoveStates.current = MoveStates.SLIDE
 
