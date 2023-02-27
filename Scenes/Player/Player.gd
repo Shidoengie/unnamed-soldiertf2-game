@@ -29,7 +29,7 @@ func _process(delta):
 	if player_body.is_on_floor():
 		falling = false
 	if falling:
-		camera.global_transform.origin.y = player_body.global_transform.origin.y
+		camera.global_transform.origin.y = player_body.global_transform.origin.y+150
 	elif player_body.is_on_floor():
 		camera.global_transform.origin.y = player_body.position.y+camera_offset.y
 	

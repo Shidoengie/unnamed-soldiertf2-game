@@ -42,7 +42,7 @@ func _physics_process(delta):
 #
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		velocity.y = min(velocity.y,PlayerStats.terminalVelocity)
+		velocity.y = clamp(velocity.y,-PlayerStats.terminalVelocity,PlayerStats.terminalVelocity)
 		velocity = velocity
 		if SlideStates.current != SlideStates.LAUNCHED:
 			SlideStates.current = SlideStates.ONAIR
