@@ -30,7 +30,7 @@ func _process(delta):
 		falling = false
 	if falling:
 		camera.global_transform.origin.y = player_body.global_transform.origin.y+150
-	elif player_body.is_on_floor():
+	elif GroundStates.current != GroundStates.JUMP or (Input.is_action_just_released("look_down") or Input.is_action_just_released("look_up")):
 		camera.global_transform.origin.y = player_body.position.y+camera_offset.y
 	
 	
