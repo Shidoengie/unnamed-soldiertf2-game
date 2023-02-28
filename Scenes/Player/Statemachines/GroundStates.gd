@@ -4,6 +4,8 @@ extends Node2D
 @onready var SlideStates = %SlideStates
 @onready var MoveStates = %MoveStates
 @onready var GroundStates = %GroundStates
+@onready var player = %PlayerBody
+@onready var rootNode = $"../../.."
 enum {
 	ONGROUND, LAND,
 	FALL, JUST_FELL,
@@ -23,31 +25,31 @@ func stateMachine():
 	match current:
 		#A single fire state used to apply the jump foce which makes the player jump
 		JUST_JUMP:
-			_JustJumpState(Global.player)
+			_JustJumpState()
 		FALL:
 			AnimStates.current = AnimStates.Enum.FALL
 		#Handles if the player has landed just touched the ground
 		FALL , JUMP:
-			if Global.player.is_on_floor():
+			if player.is_on_floor():
 				current = LAND
 
 		#A single fire state used to trigger reloading and restarting the coyote timer
 		LAND:
-			_LandState(Global.player)
+			_LandState()
 		#groundstate for handling fall detection and onground animations
-		ONGROUND: _OngroudState(Global.player)
-		CROUCH: _CrouchState(Global.player)
+		ONGROUND: _OngroudState()
+		CROUCH: _CrouchState()
 		_:
 			pass
-func _JustJumpState(player):
+func _JustJumpState():
 	player.velocity.y = -PlayerStats.jumpForce
 	current = JUMP
 	AnimStates.current = AnimStates.Enum.JUMP
-func _LandState(player):
+func _LandState():
 	current = ONGROUND
 	player.canJump = true
-	AnimStates.current = AnimStates.LAND
-func _OngroudState(player):
+	AnimStates.current = AnimStates.Enum.LAND
+func _OngroudState():
 	player.canJump = true
 	if not player.is_on_floor():
 		current = FALL
@@ -57,11 +59,10 @@ func _OngroudState(player):
 		AnimStates.current = AnimStates.Enum.WALK
 	else:
 		AnimStates.current = AnimStates.Enum.RESET
-func _CrouchState(player):
+func _CrouchState():
 	SlideStates.current = SlideStates.CROUCH
 	SpeedValues.current = SpeedValues.CROUCH
 	if MoveStates.current != MoveStates.STOPED:
 		AnimStates.current = AnimStates.Enum.CROUCH_WALK
 	else:
 		AnimStates.current = AnimStates.Enum.CROUCH_IDLE
-	%Camera2d.position = player.CameraValues.CROUCH
