@@ -749,10 +749,11 @@ size = Vector2(32, 48)
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_3x8r0")
+cur_CameraSettings = 0
 
 [node name="Camera2d" type="Camera2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(0, -302)
+position = Vector2(0, -238)
 zoom = Vector2(0.8, 0.8)
 position_smoothing_enabled = true
 editor_draw_drag_margin = true
@@ -828,6 +829,7 @@ position = Vector2(0, 0.254395)
 script = ExtResource("13_x0w15")
 
 [node name="Polygon2D" type="Polygon2D" parent="PlayerBody"]
+visible = false
 position = Vector2(7, 7.69231)
 scale = Vector2(0.5, 0.692308)
 polygon = PackedVector2Array(0, -1, 50, -1, 50, -14, 0, -14)
