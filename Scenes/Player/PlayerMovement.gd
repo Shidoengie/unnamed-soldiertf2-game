@@ -43,7 +43,6 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		velocity.y = clamp(velocity.y,-PlayerStats.terminalVelocity,PlayerStats.terminalVelocity)
-		velocity = velocity
 		if SlideStates.current != SlideStates.LAUNCHED:
 			SlideStates.current = SlideStates.ONAIR
 		if coyoteTimer >= coyoteTimerMax:
@@ -69,7 +68,9 @@ func _physics_process(delta):
 	AnimStates.current,
 	Camera.position,
 	delta,
-	"IsonSeiling"
+	"IsonSeiling",
+	"is_on_wall",
+	is_on_wall()
 	]
 	DEV_GUI(dev)
 	_stateChecks()
@@ -94,14 +95,7 @@ func _stateMachines(delta) -> void:
 	if PREV_animState != AnimStates.current:
 		BodyAnimState.travel(AnimStates.current)
 func _stateChecks() -> void:
-
-#	if Input.is_action_pressed("look_down"):
-#		Camera.position = CameraValues.LOOK_DOWN
-#	elif Input.is_action_pressed("look_up"):
-#		Camera.position = CameraValues.LOOK_UP
-#	elif GroundStates.current != GroundStates.CROUCH:
-#		Camera.position = Base_CameraPos
-
+	
 	_crouch()
 
 	if Input.is_action_just_pressed("Jump") and canJump:
@@ -109,7 +103,10 @@ func _stateChecks() -> void:
 
 	if Input.is_action_pressed("MoveLeft"):
 		MoveStates.current = MoveStates.LEFT
-
+	if Input.is_action_just_pressed("MoveLeft"):
+		scale.x = -1
+	if Input.is_action_just_pressed("MoveRight"):
+		scale.x = 1
 	elif Input.is_action_pressed("MoveRight"):
 		MoveStates.current = MoveStates.RIGHT
 	#The function of the else is to check if the player is pressing any directional keys

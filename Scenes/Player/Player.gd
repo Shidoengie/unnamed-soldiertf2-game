@@ -23,14 +23,15 @@ enum CameraSettings {
 }
 func _process(delta):
 	if Input.is_action_pressed("look_down"):
-		camera_offset = CameraValues.LOOK_DOWN
+		camera_offset = lerp(camera_offset,CameraValues.LOOK_DOWN,0.15)
 	elif Input.is_action_pressed("look_up"):
-		camera_offset = CameraValues.LOOK_UP
+		camera_offset = lerp(camera_offset,CameraValues.LOOK_UP,0.15)
 	elif GroundStates.current == GroundStates.CROUCH:
-		camera_offset = CameraValues.CROUCH
+		camera_offset = lerp(camera_offset,CameraValues.CROUCH,0.15)
 	elif player_visible.is_on_screen() and GroundStates.current != GroundStates.FALL:
-		camera_offset = Base_CameraPos
-	camera.global_transform.origin.x = player_body.position.x+camera_offset.x
+		camera_offset = lerp(camera_offset,Base_CameraPos,0.15)
+	var new_xpos = player_body.position.x+camera_offset.x
+	camera.global_transform.origin.x = new_xpos
 	match cur_CameraSettings:
 		CameraSettings.FOLLOW:
 			camera.global_transform.origin.y = player_body.position.y+camera_offset.y

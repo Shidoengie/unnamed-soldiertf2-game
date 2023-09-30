@@ -1,7 +1,6 @@
-[gd_scene load_steps=47 format=3 uid="uid://0se601wres0x"]
+[gd_scene load_steps=41 format=3 uid="uid://jnl7sck3w5ra"]
 
-[ext_resource type="Script" path="res://Scenes/Player/Player.gd" id="1_3x8r0"]
-[ext_resource type="Script" path="res://Scenes/Player/PlayerMovement.gd" id="1_4chv1"]
+[ext_resource type="Script" path="res://Scenes/oldPlayer/Player.gd" id="1_iubc7"]
 [ext_resource type="Texture2D" uid="uid://3rqih43y5sbk" path="res://Scenes/Player/Assets/Walk.png" id="2_lluym"]
 [ext_resource type="Texture2D" uid="uid://ddw0l22h1f70l" path="res://Scenes/Player/Assets/RESET.png" id="3_0dg0o"]
 [ext_resource type="Texture2D" uid="uid://rptf73d27i74" path="res://Scenes/Player/Assets/jump.png" id="3_h7n8s"]
@@ -9,11 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://cehw3vgyvsxx6" path="res://Scenes/Player/Assets/Land.png" id="6_siggd"]
 [ext_resource type="Texture2D" uid="uid://c5o17b3mba5gv" path="res://Scenes/Player/Assets/Crouch_idle.png" id="7_jhvbv"]
 [ext_resource type="Texture2D" uid="uid://vtaf5ij1an7a" path="res://Scenes/Player/Assets/Crouch_walk.png" id="8_tbii7"]
-[ext_resource type="Script" path="res://Scenes/Player/Statemachines/GroundStates.gd" id="9_axna0"]
-[ext_resource type="Script" path="res://Scenes/Player/Statemachines/AnimStates.gd" id="10_ke2cw"]
-[ext_resource type="Script" path="res://Scenes/Player/Statemachines/SlideStates.gd" id="11_v8hjv"]
-[ext_resource type="Script" path="res://Scenes/Player/Statemachines/SpeedValues.gd" id="12_b0so6"]
-[ext_resource type="Script" path="res://Scenes/Player/Statemachines/MoveStates.gd" id="13_x0w15"]
+
+[sub_resource type="GDScript" id="GDScript_pcr7g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_64fa3"]
+size = Vector2(32, 47)
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_y7etl"]
 animation = &"Crouch_Walk"
@@ -152,44 +151,19 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("CrouchClipCheck:position")
+tracks/5/path = NodePath("CollisionShape2d:polygon")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -12)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:shape:size")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 40)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("CollisionShape2D:position")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 4)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -12, 12, -16, -12, -16, -16, -12, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_daikj"]
 resource_name = "Crouch_idle"
 length = 0.01
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -253,38 +227,14 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("CrouchClipCheck:position")
+tracks/5/path = NodePath("CollisionShape2d:polygon")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -12)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:shape:size")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 40)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("CollisionShape2D:position")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 4)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -12, 12, -16, -12, -16, -16, -12, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_tbyq7"]
@@ -341,38 +291,14 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("CrouchClipCheck:position")
+tracks/4/path = NodePath("CollisionShape2d:polygon")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -18)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:shape:size")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 48)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -20, 12, -24, -13, -24, -16, -20, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_laidt"]
@@ -429,38 +355,14 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("CrouchClipCheck:position")
+tracks/4/path = NodePath("CollisionShape2d:polygon")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -18)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:shape:size")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 48)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -20, 12, -24, -13, -24, -16, -20, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_oca4r"]
@@ -517,38 +419,14 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("CrouchClipCheck:position")
+tracks/4/path = NodePath("CollisionShape2d:polygon")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -18)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:shape:size")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 48)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -20, 12, -24, -13, -24, -16, -20, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_d3hgj"]
@@ -616,38 +494,14 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("CrouchClipCheck:position")
+tracks/5/path = NodePath("CollisionShape2d:polygon")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -18)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("CollisionShape2D:shape:size")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 48)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("CollisionShape2D:position")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -20, 12, -24, -12, -24, -16, -20, -16, 20, -12, 24)]
 }
 
 [sub_resource type="Animation" id="Animation_na6da"]
@@ -694,38 +548,14 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("CrouchClipCheck:position")
+tracks/3/path = NodePath("CollisionShape2d:polygon")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, -18)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:shape:size")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(32, 48)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CollisionShape2D:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
+"update": 1,
+"values": [PackedVector2Array(12, 24, 16, 20, 16, -20, 12, -24, -13, -24, -16, -20, -16, 20, -12, 24)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gt154"]
@@ -740,105 +570,48 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dvy3q"]
-size = Vector2(29, 19)
+size = Vector2(30, 10)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_l04ol"]
-size = Vector2(32, 48)
-
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_103od"]
-a = Vector2(0, -24)
-b = Vector2(0, 24)
-
-[node name="Player" type="Node2D"]
-script = ExtResource("1_3x8r0")
-
-[node name="Camera2d" type="Camera2D" parent="."]
-unique_name_in_owner = true
-position = Vector2(0, -128)
-zoom = Vector2(0.8, 0.8)
-editor_draw_drag_margin = true
-
-[node name="PlayerBody" type="CharacterBody2D" parent="."]
-unique_name_in_owner = true
-position = Vector2(0.16629, 0)
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(0, 872)
 collision_mask = 7
-script = ExtResource("1_4chv1")
+script = ExtResource("1_iubc7")
+jumpForce = 600
+stats = SubResource("GDScript_pcr7g")
 
-[node name="PlayerVisible" type="VisibleOnScreenNotifier2D" parent="PlayerBody"]
-unique_name_in_owner = true
-position = Vector2(-0.166291, -2.5)
-scale = Vector2(1.6, 2.65)
-
-[node name="Sprite2d" type="Sprite2D" parent="PlayerBody"]
-unique_name_in_owner = true
+[node name="Sprite2d" type="Sprite2D" parent="."]
 position = Vector2(0, -16)
 scale = Vector2(3, 3)
 texture = ExtResource("3_0dg0o")
 
-[node name="BodyAnimationTree" type="AnimationTree" parent="PlayerBody"]
+[node name="CollisionShape2d" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_64fa3")
+
+[node name="Camera2d" type="Camera2D" parent="."]
+position = Vector2(0, -56)
+ignore_rotation = false
+zoom = Vector2(0.8, 0.8)
+position_smoothing_speed = 8.0
+
+[node name="BodyAnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource("AnimationNodeStateMachine_ua1fw")
 anim_player = NodePath("../AnimationPlayer")
 active = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerBody"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_gt154")
 }
 
-[node name="Feet" type="Marker2D" parent="PlayerBody"]
+[node name="Feet" type="Marker2D" parent="."]
 position = Vector2(0, 24)
 
-[node name="tick" type="Timer" parent="PlayerBody"]
+[node name="tick" type="Timer" parent="."]
 autostart = true
 
-[node name="CrouchClipCheck" type="ShapeCast2D" parent="PlayerBody"]
-position = Vector2(0, -18)
+[node name="CrouchClipCheck" type="ShapeCast2D" parent="."]
+position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_dvy3q")
-target_position = Vector2(0, -2)
-collision_mask = 5
+target_position = Vector2(0, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody"]
-shape = SubResource("RectangleShape2D_l04ol")
-
-[node name="Area2D" type="Area2D" parent="PlayerBody"]
-position = Vector2(-24.1663, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody/Area2D"]
-position = Vector2(40, 0)
-shape = SubResource("SegmentShape2D_103od")
-
-[node name="Statemachines" type="Node" parent="PlayerBody"]
-
-[node name="GroundStates" type="Node2D" parent="PlayerBody/Statemachines"]
-unique_name_in_owner = true
-position = Vector2(0.16629, -448)
-script = ExtResource("9_axna0")
-
-[node name="AnimStates" type="Node2D" parent="PlayerBody/Statemachines"]
-unique_name_in_owner = true
-position = Vector2(0.16629, -448)
-script = ExtResource("10_ke2cw")
-
-[node name="SlideStates" type="Node2D" parent="PlayerBody/Statemachines"]
-unique_name_in_owner = true
-position = Vector2(0.16629, -448)
-script = ExtResource("11_v8hjv")
-
-[node name="SpeedValues" type="Node2D" parent="PlayerBody/Statemachines"]
-unique_name_in_owner = true
-position = Vector2(0.16629, -448)
-script = ExtResource("12_b0so6")
-
-[node name="MoveStates" type="Node2D" parent="PlayerBody/Statemachines"]
-unique_name_in_owner = true
-position = Vector2(0, 0.254395)
-script = ExtResource("13_x0w15")
-
-[node name="Polygon2D" type="Polygon2D" parent="PlayerBody"]
-visible = false
-position = Vector2(7, 7.69231)
-scale = Vector2(0.5, 0.692308)
-polygon = PackedVector2Array(0, -1, 50, -1, 50, -14, 0, -14)
-
-[connection signal="screen_exited" from="PlayerBody/PlayerVisible" to="." method="_on_player_visible_screen_exited"]
-[connection signal="timeout" from="PlayerBody/tick" to="PlayerBody" method="_on_tick_timeout"]
+[connection signal="timeout" from="tick" to="." method="_on_tick_timeout"]

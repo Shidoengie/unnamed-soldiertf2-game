@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ikuhst4fwb2s"]
+
+[sub_resource type="GDScript" id="GDScript_0ixey"]
+script/source = "@export var jumpForce := 500
+@export var moveSpeed = 400.0
+@export var airSpeed := 100.0
+"
+
+[resource]
+script = SubResource("GDScript_0ixey")
+jumpForce = 500
+moveSpeed = 400.0
+airSpeed = 100.0
